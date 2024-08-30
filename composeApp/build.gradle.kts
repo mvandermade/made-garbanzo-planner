@@ -8,6 +8,7 @@ plugins {
 
 kotlin {
     jvm("desktop")
+    val pdfBoxVersion = "3.0.3"
 
     sourceSets {
         val desktopMain by getting
@@ -22,6 +23,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation("org.apache.pdfbox:pdfbox:$pdfBoxVersion")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
