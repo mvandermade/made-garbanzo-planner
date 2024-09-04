@@ -10,6 +10,7 @@ import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
+import kotlin.math.floor
 
 fun getPdf(page: PDPage): PDDocument {
     val document = PDDocument()
@@ -54,45 +55,79 @@ fun writeText(
 
 }
 
-fun writeFirstColumn(doc: PDDocument, page: PDPage, topLeftX: Float, topLeftY: Float): BoxCoordinates {
-    val fromTime = 7
-    val fromMinute = 0
-    val formatter = DateTimeFormatter.ofPattern("HH:mm")
-    val untilHour = 21
-    val untilMinute = 0
-
+fun writeFirstColumn(doc: PDDocument, page: PDPage, topLeftX: Float, topLeftY: Float, numberOfRows: Int, fromHour: Int, fromMinute: Int): BoxCoordinates {
     val font = PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD_OBLIQUE)
     val fontSize = 8f
 
     val timeHeaderWidth = 30f
     val timeHeaderHeight = 35f
     val bc = writeCell(doc, page, topLeftX, topLeftY, timeHeaderWidth, timeHeaderHeight)
-    val initialTime = LocalDateTime.now()
-    var rollingTime = initialTime
-        .with(TemporalAdjusters.next(DayOfWeek.MONDAY))
-        .withHour(fromTime).withMinute(fromMinute)
 
     val verticalSpacing = 15f
 
-    val xOffset = bc.topLeftX + font.getStringWidth("07") / 1000
+    val xOffset = bc.topLeftX + font.getStringWidth(".") / 1000 * fontSize
     var yOffset = bc.bottomRightY
 
     // Text spawns at the bottom so up it at the beginning of the loop
 
-    for (i in 0..1000) {
+    val formatter = DateTimeFormatter.ofPattern("HH:mm")
+    var loopTime = LocalDateTime.now()
+//        .with(TemporalAdjusters.next(dayOfWeek))
+        .withHour(fromHour).withMinute(fromMinute).withSecond(0)
+
+    for (i in 0..numberOfRows) {
         yOffset -= verticalSpacing
-        writeText(doc, page, xOffset, yOffset, rollingTime.format(formatter), font, fontSize)
-        if (rollingTime.hour == untilHour && rollingTime.minute == untilMinute) {
-            break
-        }
-        rollingTime = rollingTime.plusMinutes(30)
+        writeText(doc, page, xOffset, yOffset, loopTime.format(formatter), font, fontSize)
+        loopTime = loopTime.plusMinutes(30)
     }
-    yOffset -= verticalSpacing
+
+    // Lower boundary
+    yOffset -= 5f
 
     drawBox(doc, page, BoxCoordinates(bc.topLeftX, bc.bottomRightY, bc.bottomRightX, yOffset))
 
-    return BoxCoordinates(topLeftX, topLeftY, topLeftX, topLeftY)
+    return BoxCoordinates(topLeftX, topLeftY, bc.bottomRightX, yOffset)
 }
+
+fun writeSecondColumn(doc: PDDocument, page: PDPage, topLeftX: Float, topLeftY: Float, dayOfWeek: DayOfWeek, numberOfRows: Int): BoxCoordinates {
+    val day = when(dayOfWeek) {
+        DayOfWeek.MONDAY -> "maandag"
+        DayOfWeek.TUESDAY -> "dinsdag"
+        DayOfWeek.WEDNESDAY -> "woensdag"
+        DayOfWeek.THURSDAY -> "donderdag"
+        DayOfWeek.FRIDAY -> "vrijdag"
+        DayOfWeek.SATURDAY -> "zaterdag"
+        DayOfWeek.SUNDAY -> "zondag"
+    }
+
+    val bc = writeTextAndCell(doc, page, topLeftX, topLeftY, day, cellHeight = 35f)
+
+    val verticalSpacing = 15f
+    val font = PDType1Font(Standard14Fonts.FontName.HELVETICA)
+    val fontSize = 8f
+
+    val startMargin = floor(font.fontDescriptor.descent / 1000 * fontSize)
+
+    val xOffset = bc.topLeftX + font.getStringWidth(".") / 1000 * fontSize
+    var yOffset = bc.bottomRightY + startMargin
+
+    // Try to fill the whole line
+    val maxWidth = bc.bottomRightX - xOffset
+    val oneCharWidth = font.getStringWidth(".") / 1000 * fontSize
+    val template = ".".repeat((maxWidth / oneCharWidth).toInt())
+
+    for (i in 0..numberOfRows) {
+        yOffset -= verticalSpacing
+        writeText(doc, page, xOffset, yOffset, template, font, fontSize)
+    }
+
+    yOffset -= (5f + startMargin)
+
+    drawBox(doc, page, BoxCoordinates(bc.topLeftX, bc.bottomRightY, bc.bottomRightX, yOffset))
+
+    return BoxCoordinates(topLeftX, topLeftY, bc.bottomRightX, yOffset)
+}
+
 
 fun drawBox(doc: PDDocument, page: PDPage, coordinates: BoxCoordinates) {
     // The coordinates start at the top left. But drawing a box starts at the bottom left.
@@ -104,6 +139,7 @@ fun drawBox(doc: PDDocument, page: PDPage, coordinates: BoxCoordinates) {
         contents.addRect(
             coordinates.topLeftX, coordinates.bottomRightY, width, height
         )
+        contents.stroke()
     }
 }
 
@@ -144,7 +180,7 @@ fun writeTextAndCell(
         contents.stroke()
     }
 
-    return BoxCoordinates(topLeftX, topLeftY, topLeftX + cellWidth + 30, topLeftY - cellHeight + 10)
+    return BoxCoordinates(topLeftX, topLeftY, topLeftX + cellWidth, topLeftY - cellHeight)
 }
 
 
