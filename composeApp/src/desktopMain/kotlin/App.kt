@@ -21,7 +21,7 @@ fun App() {
     MaterialTheme {
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Button(onClick = { writeAndOpenPdfToTemp() }, modifier = Modifier.fillMaxHeight()) {
-                Text("Generate PDF")
+                Text("Generate PDF (or press ENTER)")
             }
         }
     }
