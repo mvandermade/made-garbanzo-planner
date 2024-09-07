@@ -37,12 +37,12 @@ fun writeText(
     page: PDPage,
     xOffset: Float,
     yOffset: Float,
-    message: String,
+    text: String,
     font: PDFont,
     fontSize: Float,
     draw: Boolean = true,
 ): BoxCoordinates {
-    val titleWidth = (font.getStringWidth(message) / 1000) * fontSize
+    val titleWidth = (font.getStringWidth(text) / 1000) * fontSize
     val titleCapHeight = (font.fontDescriptor.capHeight / 1000) * fontSize
     // Get descender height characters such as p and q
     val titleDescent = font.fontDescriptor.descent / 1000 * fontSize
@@ -52,7 +52,7 @@ fun writeText(
             contents.beginText()
             contents.setFont(font, fontSize)
             contents.newLineAtOffset(xOffset, yOffset)
-            contents.showText(message)
+            contents.showText(text)
             contents.endText()
             contents.stroke()
         }
@@ -90,9 +90,7 @@ fun doFirstColumn(
 
     // Text spawns at the bottom so up it at the beginning of the loop
     val formatter = DateTimeFormatter.ofPattern("HH:mm")
-    var loopTime =
-        LocalDateTime.now()
-            .withHour(fromHour).withMinute(fromMinute).withSecond(0)
+    var loopTime = LocalDateTime.of(2000, 1, 1, fromHour, fromMinute, 0)
 
     val verticalSpacing = 15f
     for (i in 0..numberOfRows) {

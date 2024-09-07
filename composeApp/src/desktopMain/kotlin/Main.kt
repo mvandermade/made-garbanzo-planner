@@ -20,5 +20,6 @@ fun main() =
             },
         ) {
             App()
+            writeAndOpenPdfToTemp()
         }
     }
