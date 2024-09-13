@@ -1,4 +1,3 @@
-import net.fortuna.ical4j.model.Recur
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.font.PDType1Font
@@ -93,32 +92,4 @@ private fun page(
     val bc11 = doSecondColumn(doc, page, bc10.bottomRightX, topLeftY, DayOfWeek.SUNDAY, numberOfRows, draw)
 
     return BoxCoordinates(bc1.topLeftX, bc1.topLeftY, bc11.bottomRightX, bc11.bottomRightY)
-}
-
-private fun suggestions(
-    doc: PDDocument,
-    page: PDPage,
-    topLeftX: Float,
-    topLeftY: Float,
-    fromLocalDateTime: LocalDateTime,
-    prefs: Preferences,
-    draw: Boolean = true,
-): BoxCoordinates {
-    var text = ""
-    try {
-        val recur = Recur<LocalDateTime>(prefs.get("app.rrule", ""))
-        // Remove the smallest imaginable entity to make it non-inclusive
-        val end = fromLocalDateTime.plusWeeks(1).minusNanos(1)
-
-        if (recur.getDates(fromLocalDateTime, end).size > 0) {
-            text = "> ${prefs.get("app.rruleDescription", "")}"
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
-
-    val font = PDType1Font(Standard14Fonts.FontName.COURIER)
-    val fontSize = 8f
-    val verticalSpacing = 25f
-    return writeText(doc, page, topLeftX, topLeftY - verticalSpacing, text, font, fontSize, draw)
 }
