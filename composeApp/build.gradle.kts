@@ -25,6 +25,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation("org.apache.pdfbox:pdfbox:$pdfBoxVersion")
+            implementation("org.mnode.ical4j:ical4j:4.0.3")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

@@ -1,0 +1,3 @@
+package preferences
+
+class PreferencesStore

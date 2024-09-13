@@ -1,5 +1,5 @@
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 class TimeProvider {
-    fun getLocalDateNow() = LocalDate.now()
+    fun getLocalDateTimeNow(): LocalDateTime = LocalDateTime.now()
 }
