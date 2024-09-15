@@ -1,3 +1,5 @@
+import kotlinx.serialization.json.Json
+import model.RRuleSet
 import net.fortuna.ical4j.model.Recur
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
@@ -15,17 +17,26 @@ fun suggestions(
     prefs: Preferences,
     draw: Boolean = true,
 ): BoxCoordinates {
-    var text = ""
-    try {
-        val recur = Recur<LocalDateTime>(prefs.get("app.rrule", ""))
-        // Remove the smallest imaginable entity to make it non-inclusive
-        val end = fromLocalDateTime.plusWeeks(1).minusNanos(1)
-
-        if (recur.getDates(fromLocalDateTime, end).size > 0) {
-            text = "> ${prefs.get("app.rruleDescription", "")}"
+    val rruleSetsSet =
+        try {
+            val list = Json.decodeFromString<List<RRuleSet>>(prefs.get("app.rruleSets", "[]"))
+            list.filter { it.profileId == prefs.get("app.active-profile", "0").toLong() }.toMutableSet()
+        } catch (e: Exception) {
+            mutableSetOf()
         }
-    } catch (e: Exception) {
-        e.printStackTrace()
+
+    var text = ""
+    // Remove the smallest imaginable entity to make it non-inclusive
+    val end = fromLocalDateTime.plusWeeks(1).minusNanos(1)
+    rruleSetsSet.forEach {
+        try {
+            val recur = Recur<LocalDateTime>(it.RRule)
+            if (recur.getDates(fromLocalDateTime, end).size > 0) {
+                text += "> ${it.description} <"
+            }
+        } catch (e: Exception) {
+            println("Could not parse ${it.description}")
+        }
     }
 
     val font = PDType1Font(Standard14Fonts.FontName.COURIER)

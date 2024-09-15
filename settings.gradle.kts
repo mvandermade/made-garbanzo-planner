@@ -5,6 +5,7 @@ pluginManagement {
     repositories {
         google {
             mavenContent {
+                //TODO incubating feature
                 includeGroupAndSubgroups("androidx")
                 includeGroupAndSubgroups("com.android")
                 includeGroupAndSubgroups("com.google")
@@ -16,9 +17,11 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
+    //TODO incubating feature
     repositories {
         google {
             mavenContent {
+                // TODO incubating feature
                 includeGroupAndSubgroups("androidx")
                 includeGroupAndSubgroups("com.android")
                 includeGroupAndSubgroups("com.google")

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinSerialization)
     id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
 }
 
@@ -26,6 +27,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation("org.apache.pdfbox:pdfbox:$pdfBoxVersion")
             implementation("org.mnode.ical4j:ical4j:4.0.3")
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.2")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -48,7 +50,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "made-gp"
-            packageVersion = "1.0.0"
+            packageVersion = "1.0.1"
         }
     }
 }

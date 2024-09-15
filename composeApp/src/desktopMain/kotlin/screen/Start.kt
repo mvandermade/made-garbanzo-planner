@@ -23,14 +23,14 @@ fun start(
             Row {
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Button(onClick = { requestNewAppState(AppState.PREFERENCES) }) {
-                        Text("Go to preferences")
+                        Text("Ga naar instellingen")
                     }
                 }
             }
             Row {
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Button(onClick = { writeAndOpenPdfToTemp(prefs) }) {
-                        Text("Generate PDF (or press ENTER)")
+                        Text("Genereer PDF (of druk op ENTER)")
                     }
                 }
             }
