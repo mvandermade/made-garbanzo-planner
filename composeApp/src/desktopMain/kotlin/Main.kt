@@ -4,6 +4,7 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import model.Prefs
 import preferences.PreferencesStore
 import java.util.prefs.Preferences
 
@@ -24,7 +25,7 @@ fun main() {
             },
         ) {
             App(prefs)
-            if (prefs.getBoolean("app.auto-launch", false)) {
+            if (prefs.getBoolean(Prefs.AUTO_LAUNCH.key, false)) {
                 writeAndOpenPdfToTemp(prefs)
             }
         }

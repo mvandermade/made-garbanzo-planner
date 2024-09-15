@@ -1,4 +1,5 @@
 import kotlinx.serialization.json.Json
+import model.Prefs
 import model.RRuleSet
 import net.fortuna.ical4j.model.Recur
 import org.apache.pdfbox.pdmodel.PDDocument
@@ -19,8 +20,11 @@ fun suggestions(
 ): BoxCoordinates {
     val rruleSetsSet =
         try {
-            val list = Json.decodeFromString<List<RRuleSet>>(prefs.get("app.rruleSets", "[]"))
-            list.filter { it.profileId == prefs.get("app.active-profile", "0").toLong() }.toMutableSet()
+            val list = Json.decodeFromString<List<RRuleSet>>(prefs.get(Prefs.RRULE_SETS.key, "[]"))
+            list
+                .filter { it.profileId == prefs.get(Prefs.ACTIVE_PROFILE.key, "0").toLong() }
+                .sortedBy { it.id }
+                .toMutableSet()
         } catch (e: Exception) {
             mutableSetOf()
         }
@@ -30,7 +34,7 @@ fun suggestions(
     val end = fromLocalDateTime.plusWeeks(1).minusNanos(1)
     rruleSetsSet.forEach {
         try {
-            val recur = Recur<LocalDateTime>(it.RRule)
+            val recur = Recur<LocalDateTime>(it.rrule)
             if (recur.getDates(fromLocalDateTime, end).size > 0) {
                 text += "> ${it.description} <"
             }
