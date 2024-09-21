@@ -1,7 +1,6 @@
 import kotlinx.serialization.json.Json
 import model.Prefs
 import model.RRuleSet
-import net.fortuna.ical4j.model.Recur
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.font.PDType1Font
@@ -15,32 +14,38 @@ fun suggestions(
     topLeftX: Float,
     topLeftY: Float,
     fromLocalDateTime: LocalDateTime,
+    endLocalDateTime: LocalDateTime,
     prefs: Preferences,
     draw: Boolean = true,
 ): BoxCoordinates {
+    val list = Json.decodeFromString<List<RRuleSet>>(prefs.get(Prefs.RRULE_SETS.key, "[]"))
     val rruleSetsSet =
-        try {
-            val list = Json.decodeFromString<List<RRuleSet>>(prefs.get(Prefs.RRULE_SETS.key, "[]"))
-            list
-                .filter { it.profileId == prefs.get(Prefs.ACTIVE_PROFILE.key, "0").toLong() }
-                .sortedBy { it.id }
-                .toMutableSet()
-        } catch (e: Exception) {
-            mutableSetOf()
-        }
+        list
+            .filter { it.profileId == prefs.get(Prefs.ACTIVE_PROFILE.key, "0").toLong() }
+            .sortedBy { it.id }
+            .toMutableSet()
 
-    var text = ""
+    var text = "${rruleSetsSet.size}: "
     // Remove the smallest imaginable entity to make it non-inclusive
-    val end = fromLocalDateTime.plusWeeks(1).minusNanos(1)
-    rruleSetsSet.forEach {
+
+    var counter = 0
+    rruleSetsSet.forEach { rruleSet ->
         try {
-            val recur = Recur<LocalDateTime>(it.rrule)
-            if (recur.getDates(fromLocalDateTime, end).size > 0) {
-                text += "> ${it.description} <"
+            val seed = LocalDateTime.parse(rruleSet.fromLDT, formatterLDT)
+            val dates = getRRuleDates(rruleSet.rrule, seed, fromLocalDateTime, endLocalDateTime)
+            if (dates.isNotEmpty()) {
+                text += "> ${rruleSet.description} <"
+                counter++
             }
         } catch (e: Exception) {
-            println("Could not parse ${it.description}")
+            text += "> !error ${rruleSet.description} <"
+            println("Could not parse ${rruleSet.description}")
+            e.printStackTrace()
         }
+    }
+
+    if (counter == 0) {
+        text += "0 regels..."
     }
 
     val font = PDType1Font(Standard14Fonts.FontName.COURIER)

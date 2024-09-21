@@ -1,10 +1,10 @@
 package screen.preferences
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -16,6 +16,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import formatLDT
+import formatterLDT
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import model.Prefs
@@ -59,7 +62,7 @@ fun RRuleSetRows(
             } else {
                 element.id + 1
             }
-        rruleSetsSet += RRuleSet(activeProfile.value.toLong(), newId, "", "")
+        rruleSetsSet += RRuleSet(activeProfile.value.toLong(), newId, "", "", LocalDateTime.now().format(formatterLDT))
         updateRRuleStateFromSet()
     }
 
@@ -72,6 +75,39 @@ fun RRuleSetRows(
         rruleSetsSet.remove(rrule)
         rruleSetsSet.add(copy)
         updateRRuleStateFromSet()
+        saveMsgTimer?.cancel()
+        saveMsg = "💬Opgeslagen!"
+        saveMsgTimer =
+            Timer("Reset save message").schedule(3000, 5000L) {
+                saveMsg = ""
+                saveMsgTimer?.cancel()
+            }
+    }
+
+    fun saveLDT(
+        id: Long,
+        ldtString: String,
+    ) {
+        val rrule = rruleSetsSet.find { it.id == id } ?: return
+        val copy = rrule.copy(fromLDT = ldtString)
+        rruleSetsSet.remove(rrule)
+        rruleSetsSet.add(copy)
+        updateRRuleStateFromSet()
+
+        try {
+            LocalDateTime.parse(ldtString, formatterLDT)
+            rruleErrorMsg = "✅"
+            rruleErrorMsgTimer =
+                Timer("Reset error message").schedule(3000, 5000L) {
+                    rruleErrorMsg = ""
+                    rruleErrorMsgTimer?.cancel()
+                }
+        } catch (e: Exception) {
+            rruleErrorMsgTimer?.cancel()
+            rruleErrorMsg = "${rrule.description} heeft aandacht nodig: ${e.message}"
+            return
+        }
+
         saveMsgTimer?.cancel()
         saveMsg = "💬Opgeslagen!"
         saveMsgTimer =
@@ -146,8 +182,8 @@ fun RRuleSetRows(
                 rruleSetsSet
                     .filter { it.profileId == activeProfile.value.toLong() }
                     .sortedBy { it.id }.map { rruleSet ->
-                        Row(horizontalArrangement = Arrangement.SpaceAround) {
-                            Column {
+                        Row(Modifier.fillMaxWidth()) {
+                            Column(Modifier.width(200.dp)) {
                                 TextField(
                                     label = { Text("Beschrijving") },
                                     value = rruleSet.description,
@@ -156,7 +192,16 @@ fun RRuleSetRows(
                                     },
                                 )
                             }
-                            Column {
+                            Column(Modifier.width(200.dp)) {
+                                TextField(
+                                    label = { Text("Vanaf: $formatLDT") },
+                                    value = rruleSet.fromLDT,
+                                    onValueChange = {
+                                        saveLDT(rruleSet.id, it)
+                                    },
+                                )
+                            }
+                            Column(Modifier.width(300.dp)) {
                                 TextField(
                                     label = { Text("RRule") },
                                     value = rruleSet.rrule,
@@ -165,7 +210,7 @@ fun RRuleSetRows(
                                     },
                                 )
                             }
-                            Column {
+                            Column(Modifier.width(100.dp)) {
                                 Button(onClick = { deleteRRule(rruleSet.id) }) {
                                     Text("X")
                                 }

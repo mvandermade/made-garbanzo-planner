@@ -26,7 +26,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation("org.apache.pdfbox:pdfbox:$pdfBoxVersion")
-            implementation("org.mnode.ical4j:ical4j:4.0.3")
+            implementation("org.mnode.ical4j:ical4j:4.0.4")
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.2")
         }
         commonTest.dependencies {
@@ -50,7 +50,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "made-gp"
-            packageVersion = "1.0.2"
+            packageVersion = "1.0.3"
         }
     }
 }

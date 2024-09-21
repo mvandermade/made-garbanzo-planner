@@ -28,7 +28,7 @@ fun preferences(
     prefs: Preferences,
 ) {
     // To let the user see the change immediately
-    var activeProfile = remember { mutableStateOf(prefs.get(Prefs.ACTIVE_PROFILE.key, "0")) }
+    val activeProfile = remember { mutableStateOf(prefs.get(Prefs.ACTIVE_PROFILE.key, "0")) }
 
     MaterialTheme {
         Box(

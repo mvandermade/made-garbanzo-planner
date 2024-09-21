@@ -1,10 +1,13 @@
+import model.Prefs
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts
 import java.awt.Desktop
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.temporal.ChronoField
 import java.time.temporal.TemporalAdjusters
 import java.util.prefs.Preferences
@@ -15,11 +18,15 @@ fun writeAndOpenPdfToTemp(prefs: Preferences) {
     val doc = getPdf(page)
 
     // Assume you want to plan ahead to the next week...
-    val fromLocalDateTime =
-        timeProvider.getLocalDateTimeNow().with(
-            TemporalAdjusters.next(DayOfWeek.MONDAY),
-        ).withHour(0).withMinute(0).withSecond(0).withNano(0)
-    val bcHeader = header(doc, page, fromLocalDateTime, true)
+    // TODO create a user input like LocalDate or something to allow changing it (easy for debugging RRULES)
+
+    val fromLocalDateTime = getFromLDT(prefs, timeProvider)
+
+    val fromNextMonday = pickNextMonday(fromLocalDateTime)
+
+    val endLocalDateTime = fromNextMonday.plusWeeks(1).minusNanos(1)
+
+    val bcHeader = header(doc, page, fromNextMonday, true)
 
     // Setting up table
     val fromHour = 7
@@ -33,7 +40,7 @@ fun writeAndOpenPdfToTemp(prefs: Preferences) {
     val topLeftX = page.mediaBox.width / 2 - (tableWidth / 2)
     val bcPage = page(doc, page, topLeftX, bcHeader.bottomRightY - 20, numberOfRows, fromHour, fromMinute, true)
 
-    suggestions(doc, page, topLeftX, bcPage.bottomRightY, fromLocalDateTime, prefs, true)
+    suggestions(doc, page, topLeftX, bcPage.bottomRightY, fromNextMonday, endLocalDateTime, prefs, true)
 
     // Saving and opening
     val tempFile = kotlin.io.path.createTempFile("planner-101-", suffix = ".pdf").toFile()
@@ -41,6 +48,28 @@ fun writeAndOpenPdfToTemp(prefs: Preferences) {
     savePdf(doc, tempFile)
     doc.close()
     Desktop.getDesktop().open(tempFile)
+}
+
+fun pickNextMonday(localDateTime: LocalDateTime): LocalDateTime {
+    return localDateTime.with(
+        TemporalAdjusters.next(DayOfWeek.MONDAY),
+    ).withHour(0).withMinute(0).withSecond(0).withNano(0)
+}
+
+fun getFromLDT(
+    prefs: Preferences,
+    timeProvider: TimeProvider,
+): LocalDateTime {
+    return if (prefs.getBoolean(Prefs.START_DATE_ENABLED.key, false)) {
+        try {
+            val localDate = LocalDate.parse(prefs.get(Prefs.START_DATE.key, ""), formatterLD)
+            LocalDateTime.of(localDate, LocalTime.MIDNIGHT)
+        } catch (e: Exception) {
+            timeProvider.getLocalDateTimeNow()
+        }
+    } else {
+        timeProvider.getLocalDateTimeNow()
+    }
 }
 
 private fun header(

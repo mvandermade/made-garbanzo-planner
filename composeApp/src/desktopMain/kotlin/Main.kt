@@ -11,7 +11,10 @@ import java.util.prefs.Preferences
 fun main() {
     val prefs = Preferences.userRoot().node(PreferencesStore::class.java.name)
 
-    return application {
+    // For some reason the application becomes buggy when you leave the option ON...
+    prefs.putBoolean(Prefs.START_DATE_ENABLED.key, false)
+
+    application {
         Window(
             onCloseRequest = ::exitApplication,
             title = "made-garbanzo-planner",
