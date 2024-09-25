@@ -10,7 +10,6 @@ plugins {
 
 kotlin {
     jvm("desktop")
-    val pdfBoxVersion = "3.0.3"
 
     sourceSets {
         val desktopMain by getting
@@ -25,8 +24,8 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation("org.apache.pdfbox:pdfbox:$pdfBoxVersion")
-            implementation("org.mnode.ical4j:ical4j:4.0.4")
+            implementation("org.apache.pdfbox:pdfbox:3.0.3")
+            implementation("org.dmfs:lib-recur:0.17.1")
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.2")
         }
         commonTest.dependencies {
@@ -46,6 +45,14 @@ kotlin {
 compose.desktop {
     application {
         mainClass = "MainKt"
+
+        buildTypes.release.proguard {
+            // FIXME can't use proguard due to duplicate jar entry warnings
+            isEnabled.set(false)
+            obfuscate.set(false)
+            // Add this line
+            configurationFiles.from(project.file("compose-desktop.pro"))
+        }
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)

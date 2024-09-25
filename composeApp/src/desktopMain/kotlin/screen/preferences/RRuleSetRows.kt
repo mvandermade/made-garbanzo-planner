@@ -23,7 +23,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import model.Prefs
 import model.RRuleSet
-import net.fortuna.ical4j.model.Recur
+import org.dmfs.rfc5545.recur.RecurrenceRule
 import java.time.LocalDateTime
 import java.util.*
 import java.util.prefs.Preferences
@@ -129,7 +129,7 @@ fun RRuleSetRows(
         updateRRuleStateFromSet()
 
         try {
-            Recur<LocalDateTime>(rruleString)
+            RecurrenceRule(rruleString)
             rruleErrorMsg = "✅"
             rruleErrorMsgTimer =
                 Timer("Reset error message").schedule(3000, 5000L) {

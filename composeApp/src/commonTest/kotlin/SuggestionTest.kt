@@ -8,9 +8,9 @@ import java.util.prefs.Preferences
 import kotlin.test.assertEquals
 
 class SuggestionTest {
-    val startLocalDateTime = LocalDateTime.of(2021, 1, 1, 1, 0, 0)
-    val endLocalDateTime = startLocalDateTime.plusWeeks(1).minusNanos(1)
-    val entryLocalDateTimeString = LocalDateTime.of(2021, 1, 6, 1, 0, 0).format(formatterLDT)
+    private val startLocalDateTime: LocalDateTime = LocalDateTime.of(2021, 1, 1, 1, 0, 0)
+    private val endLocalDateTime: LocalDateTime = startLocalDateTime.plusWeeks(1).minusNanos(1)
+    private val entryLocalDateTimeString: String = LocalDateTime.of(2021, 1, 6, 1, 0, 0).format(formatterLDT)
 
     @Test
     fun `Daily rrule should be picked up`() {
@@ -34,6 +34,34 @@ class SuggestionTest {
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)
         assertEquals("1: > $rruleDescription <\n", text)
+    }
+
+    @Test
+    fun `Daily rrule should be picked up but except too many loops`() {
+        // Causes 1000 or more iterations
+        val startLocalDateTimeTooLarge: LocalDateTime = LocalDateTime.of(2025, 1, 1, 1, 0, 0)
+        val endLocalDateTimeTooLarge: LocalDateTime = startLocalDateTimeTooLarge.plusWeeks(1).minusNanos(1)
+
+        val mockPrefs = mockk<Preferences>()
+        val page = getPage()
+        val doc = getPdf(page)
+
+        val rruleDescription = "PrintMe"
+
+        every { mockPrefs.get(Prefs.ACTIVE_PROFILE.key, "0") } returns "1"
+
+        every { mockPrefs.get(Prefs.RRULE_SETS.key, "[]") } returns
+            """
+            [
+            { "profileId": 1, "id": 2, "description": "$rruleDescription", "rrule": "FREQ=DAILY", "fromLDT": "$entryLocalDateTimeString" }
+            ]
+            """.trimIndent()
+
+        suggestions(doc, page, 0f, 0f, startLocalDateTimeTooLarge, endLocalDateTimeTooLarge, mockPrefs, true)
+
+        val pdfTextStripper = PDFTextStripper()
+        val text = pdfTextStripper.getText(doc)
+        assertEquals("1: > !error PrintMe <0 regels...\n", text)
     }
 
     @Test
@@ -155,6 +183,7 @@ class SuggestionTest {
         assertEquals("1: > PrintMe <\n", text)
     }
 
+    @Test
     fun `Interval rule is processed correctly expect it at the second pass of period`() {
         val mockPrefs = mockk<Preferences>()
         val page = getPage()

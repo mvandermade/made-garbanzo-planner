@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import formatLD
 import formatterLD
-import getRRuleDates
 import model.Prefs
 import pickNextMonday
 import java.time.LocalDate
@@ -63,15 +62,6 @@ fun DatePickerRow(prefs: Preferences) {
             Checkbox(
                 checked = startDateEnabled,
                 onCheckedChange = {
-                    // Because of a bug weird nullpointer first generate some dates here to initialise it (hypothesis)...
-                    val dates =
-                        getRRuleDates(
-                            "FREQ=DAILY",
-                            LocalDateTime.now().minusWeeks(2),
-                            LocalDateTime.now(),
-                            LocalDateTime.now().plusWeeks(1),
-                        )
-                    println("DATES: $dates")
                     startDateEnabled = it
                     prefs.putBoolean(Prefs.START_DATE_ENABLED.key, it)
                 },

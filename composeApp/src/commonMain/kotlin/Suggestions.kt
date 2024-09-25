@@ -32,14 +32,12 @@ fun suggestions(
     rruleSetsSet.forEach { rruleSet ->
         try {
             val seed = LocalDateTime.parse(rruleSet.fromLDT, formatterLDT)
-            val dates = getRRuleDates(rruleSet.rrule, seed, fromLocalDateTime, endLocalDateTime)
-            if (dates.isNotEmpty()) {
+            if (isRRuleInDateTimeFrame(rruleSet.rrule, seed, fromLocalDateTime, endLocalDateTime)) {
                 text += "> ${rruleSet.description} <"
                 counter++
             }
         } catch (e: Exception) {
             text += "> !error ${rruleSet.description} <"
-            println("Could not parse ${rruleSet.description}")
             e.printStackTrace()
         }
     }
