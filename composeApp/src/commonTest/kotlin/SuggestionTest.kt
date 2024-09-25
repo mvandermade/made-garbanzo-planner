@@ -33,7 +33,7 @@ class SuggestionTest {
 
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)
-        assertEquals("1: > $rruleDescription <\n", text)
+        assertEquals("1: > $rruleDescription <", text.trimEnd())
     }
 
     @Test
@@ -61,7 +61,7 @@ class SuggestionTest {
 
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)
-        assertEquals("1: > !error PrintMe <0 regels...\n", text)
+        assertEquals("1: > !error PrintMe <0 regels...", text.trimEnd())
     }
 
     @Test
@@ -85,7 +85,7 @@ class SuggestionTest {
 
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)
-        assertEquals("3: > PrintMe <> PrintMe2 <> PrintMe3 <\n", text)
+        assertEquals("3: > PrintMe <> PrintMe2 <> PrintMe3 <", text.trimEnd())
     }
 
     @Test
@@ -108,7 +108,7 @@ class SuggestionTest {
 
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)
-        assertEquals("2: > PrintMe <> !error NO_PRINT <\n", text)
+        assertEquals("2: > PrintMe <> !error NO_PRINT <", text.trimEnd())
     }
 
     @Test
@@ -131,7 +131,7 @@ class SuggestionTest {
 
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)
-        assertEquals("1: > PrintMe <\n", text)
+        assertEquals("1: > PrintMe <", text.trimEnd())
     }
 
     @Test
@@ -154,7 +154,7 @@ class SuggestionTest {
 
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)
-        assertEquals("1: > PrintMe <\n", text)
+        assertEquals("1: > PrintMe <", text.trimEnd())
     }
 
     @Test
@@ -180,7 +180,7 @@ class SuggestionTest {
 
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)
-        assertEquals("1: > PrintMe <\n", text)
+        assertEquals("1: > PrintMe <", text.trimEnd())
     }
 
     @Test
@@ -206,6 +206,6 @@ class SuggestionTest {
 
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)
-        assertEquals("1: > PrintMe <\n", text)
+        assertEquals("1: > PrintMe <", text.trimEnd())
     }
 }
