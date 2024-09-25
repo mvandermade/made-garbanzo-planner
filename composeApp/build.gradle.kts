@@ -46,9 +46,21 @@ compose.desktop {
     application {
         mainClass = "MainKt"
 
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            macOS {
+                iconFile.set(project.file("icon/icon.icns"))
+            }
+            windows {
+                iconFile.set(project.file("icon/icon.ico"))
+            }
+            linux {
+                iconFile.set(project.file("icon/icon.png"))
+            }
+        }
+
         buildTypes.release.proguard {
-            // FIXME can't use proguard due to duplicate jar entry warnings
-            isEnabled.set(false)
+            isEnabled.set(true)
             obfuscate.set(false)
             // Add this line
             configurationFiles.from(project.file("compose-desktop.pro"))
@@ -57,7 +69,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "made-gp"
-            packageVersion = "1.0.3"
+            packageVersion = "1.0.4"
         }
     }
 }

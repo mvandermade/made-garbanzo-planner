@@ -2,6 +2,7 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.type
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import model.Prefs
@@ -16,6 +17,7 @@ fun main() {
 
     application {
         Window(
+            icon = painterResource("icon.png"),
             onCloseRequest = ::exitApplication,
             title = "made-garbanzo-planner",
             onKeyEvent = {
