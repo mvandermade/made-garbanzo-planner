@@ -60,7 +60,8 @@ compose.desktop {
         }
 
         buildTypes.release.proguard {
-            isEnabled.set(true)
+            // false because of "can't find referenced class"
+            isEnabled.set(false)
             obfuscate.set(false)
             // Add this line
             configurationFiles.from(project.file("compose-desktop.pro"))
