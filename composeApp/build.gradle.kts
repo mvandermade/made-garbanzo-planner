@@ -26,11 +26,11 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation("org.apache.pdfbox:pdfbox:3.0.3")
             implementation("org.dmfs:lib-recur:0.17.1")
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.2")
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-            implementation("io.mockk:mockk:1.13.12")
+            implementation("io.mockk:mockk:1.13.13")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
