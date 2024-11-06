@@ -30,7 +30,7 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-            implementation("io.mockk:mockk:1.13.12")
+            implementation("io.mockk:mockk:1.13.13")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
