@@ -244,16 +244,6 @@ fun writeTextAndCell(
 
 data class BoxCoordinates(val topLeftX: Float, val topLeftY: Float, val bottomRightX: Float, val bottomRightY: Float)
 
-data class BoxCoordinatesHolder(
-    var topLeftX: Float,
-    var topLeftY: Float,
-    var bottomRightX: Float,
-    var bottomRightY: Float,
-)
-
-fun BoxCoordinatesHolder.toBoxCoordinates(): BoxCoordinates =
-    BoxCoordinates(topLeftX, topLeftY, bottomRightX, bottomRightY)
-
 fun getContentStream(
     doc: PDDocument,
     page: PDPage,

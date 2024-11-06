@@ -8,14 +8,14 @@ class TimeProvider {
     fun getLocalDateTimeNow(): LocalDateTime = LocalDateTime.now()
 }
 
-val formatLDT = "dd-MM-yyyy HH:mm"
-val formatterLDT = DateTimeFormatter.ofPattern(formatLDT)
+const val formatLDT = "dd-MM-yyyy HH:mm"
+val formatterLDT: DateTimeFormatter = DateTimeFormatter.ofPattern(formatLDT)
 
-val formatLD = "dd-MM-yyyy"
-val formatterLD = DateTimeFormatter.ofPattern(formatLD)
+const val formatLD = "dd-MM-yyyy"
+val formatterLD: DateTimeFormatter = DateTimeFormatter.ofPattern(formatLD)
 
-val formatRecurLDT = "yyyyMMdd'T'HHmmss"
-val formatterRecurLDT = DateTimeFormatter.ofPattern(formatRecurLDT)
+const val formatRecurLDT = "yyyyMMdd'T'HHmmss"
+val formatterRecurLDT: DateTimeFormatter = DateTimeFormatter.ofPattern(formatRecurLDT)
 
 fun isRRuleInDateTimeFrame(
     rruleString: String,

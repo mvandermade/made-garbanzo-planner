@@ -33,7 +33,7 @@ fun DatePickerRow(prefs: Preferences) {
     var startDateEnabled by remember { mutableStateOf(prefs.getBoolean(Prefs.START_DATE_ENABLED.key, false)) }
     var localDateString by remember { mutableStateOf(prefs.get(Prefs.START_DATE.key, "01-01-2000")) }
 
-    var errorMsg by remember { mutableStateOf<String>("") }
+    var errorMsg by remember { mutableStateOf("") }
     var errorMsgTimer by remember { mutableStateOf<TimerTask?>(null) }
 
     fun saveLD(value: String) {
