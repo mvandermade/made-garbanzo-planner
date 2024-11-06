@@ -1,5 +1,6 @@
 package screen.preferences
 
+import FORMAT_LDT
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -17,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import formatLDT
 import formatterLDT
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -194,7 +194,7 @@ fun RRuleSetRows(
                             }
                             Column(Modifier.width(200.dp)) {
                                 TextField(
-                                    label = { Text("Vanaf: $formatLDT") },
+                                    label = { Text("Vanaf: $FORMAT_LDT") },
                                     value = rruleSet.fromLDT,
                                     onValueChange = {
                                         saveLDT(rruleSet.id, it)

@@ -1,5 +1,6 @@
 package screen.start
 
+import FORMAT_LD
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,7 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import formatLD
 import formatterLD
 import model.Prefs
 import pickNextMonday
@@ -72,7 +72,7 @@ fun DatePickerRow(prefs: Preferences) {
         Row {
             Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 TextField(
-                    label = { Text("Vanaf: $formatLD") },
+                    label = { Text("Vanaf: $FORMAT_LD") },
                     value = localDateString,
                     onValueChange = {
                         saveLD(it)
