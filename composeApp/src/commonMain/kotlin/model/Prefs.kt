@@ -7,4 +7,5 @@ enum class Prefs(val key: String) {
     PROFILES("app.profiles"),
     START_DATE("app.start-date"),
     START_DATE_ENABLED("app.start-date-enabled"),
+    AUTO_OPEN_PDF("app.auto-open-pdf"),
 }

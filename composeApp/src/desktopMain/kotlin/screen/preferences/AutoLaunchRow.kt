@@ -12,12 +12,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import model.Prefs
 import java.util.prefs.Preferences
 
 @Composable
 fun AutoLaunchRow(prefs: Preferences) {
     var autoStart by remember { mutableStateOf(prefs.getBoolean(Prefs.AUTO_LAUNCH.key, false)) }
+    var autoOpen by remember { mutableStateOf(prefs.getBoolean(Prefs.AUTO_OPEN_PDF.key, true)) }
 
     Row {
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -29,6 +32,20 @@ fun AutoLaunchRow(prefs: Preferences) {
                         autoStart = it
                         prefs.putBoolean(Prefs.AUTO_LAUNCH.key, it)
                     },
+                )
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("PDF na genereren openen?")
+                Checkbox(
+                    checked = autoOpen,
+                    onCheckedChange = {
+                        autoOpen = it
+                        prefs.putBoolean(Prefs.AUTO_OPEN_PDF.key, it)
+                    },
+                    modifier =
+                        Modifier.semantics {
+                            contentDescription = "auto-open-pdf"
+                        },
                 )
             }
         }

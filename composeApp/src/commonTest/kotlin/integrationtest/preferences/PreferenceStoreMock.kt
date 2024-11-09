@@ -1,0 +1,3 @@
+package integrationtest.preferences
+
+class PreferenceStoreMock

@@ -17,6 +17,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import formatterLDT
 import kotlinx.serialization.encodeToString
@@ -190,6 +192,10 @@ fun RRuleSetRows(
                                     onValueChange = {
                                         saveRRuleDescription(rruleSet.id, it)
                                     },
+                                    modifier =
+                                        Modifier.semantics {
+                                            contentDescription = "RRule-${rruleSet.id}-description"
+                                        },
                                 )
                             }
                             Column(Modifier.width(200.dp)) {
@@ -199,6 +205,10 @@ fun RRuleSetRows(
                                     onValueChange = {
                                         saveLDT(rruleSet.id, it)
                                     },
+                                    modifier =
+                                        Modifier.semantics {
+                                            contentDescription = "RRule-${rruleSet.id}-from"
+                                        },
                                 )
                             }
                             Column(Modifier.width(300.dp)) {
@@ -208,11 +218,21 @@ fun RRuleSetRows(
                                     onValueChange = {
                                         saveRRule(rruleSet.id, it)
                                     },
+                                    modifier =
+                                        Modifier.semantics {
+                                            contentDescription = "RRule-${rruleSet.id}-RRule"
+                                        },
                                 )
                             }
                             Column(Modifier.width(100.dp)) {
                                 Button(onClick = { deleteRRule(rruleSet.id) }) {
-                                    Text("X")
+                                    Text(
+                                        "X",
+                                        modifier =
+                                            Modifier.semantics {
+                                                contentDescription = "RRule-${rruleSet.id}-delete"
+                                            },
+                                    )
                                 }
                             }
                         }

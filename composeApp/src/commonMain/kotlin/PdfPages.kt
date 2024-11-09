@@ -12,7 +12,7 @@ import java.time.temporal.ChronoField
 import java.time.temporal.TemporalAdjusters
 import java.util.prefs.Preferences
 
-fun writeAndOpenPdfToTemp(prefs: Preferences) {
+fun writeAndOpenPdfToTemp(prefs: Preferences): String {
     val timeProvider = TimeProvider()
     val page = getPage()
     val doc = getPdf(page)
@@ -47,7 +47,13 @@ fun writeAndOpenPdfToTemp(prefs: Preferences) {
     tempFile.deleteOnExit()
     savePdf(doc, tempFile)
     doc.close()
-    Desktop.getDesktop().open(tempFile)
+
+    // Testers can use this to remain headless
+    if (prefs.getBoolean(Prefs.AUTO_OPEN_PDF.key, true)) {
+        Desktop.getDesktop().open(tempFile)
+    }
+
+    return tempFile.path
 }
 
 fun pickNextMonday(localDateTime: LocalDateTime): LocalDateTime {
