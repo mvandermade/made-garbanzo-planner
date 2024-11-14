@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # Mac OS runner only 64 bits. ARM target is common now but can't produce easily deployables yet...
+        # MacOS runner only 64 bits. ARM target is common now but can't produce easily deployables yet...
         # Suggestion: add 'macOS-latest' when easy to add!
         # ubuntu-latest
         os: [ windows-latest ]

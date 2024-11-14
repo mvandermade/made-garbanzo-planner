@@ -19,7 +19,7 @@ import java.util.prefs.Preferences
 
 @Composable
 fun AutoLaunchRow(prefs: Preferences) {
-    var autoStart by remember { mutableStateOf(prefs.getBoolean(Prefs.AUTO_LAUNCH.key, false)) }
+    var autoStart by remember { mutableStateOf(prefs.getBoolean(Prefs.ON_STARTUP_OPEN_PDF.key, false)) }
     var autoOpen by remember { mutableStateOf(prefs.getBoolean(Prefs.AUTO_OPEN_PDF.key, true)) }
 
     Row {
@@ -30,7 +30,7 @@ fun AutoLaunchRow(prefs: Preferences) {
                     checked = autoStart,
                     onCheckedChange = {
                         autoStart = it
-                        prefs.putBoolean(Prefs.AUTO_LAUNCH.key, it)
+                        prefs.putBoolean(Prefs.ON_STARTUP_OPEN_PDF.key, it)
                     },
                 )
             }

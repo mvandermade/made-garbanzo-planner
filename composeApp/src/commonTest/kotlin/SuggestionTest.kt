@@ -15,8 +15,8 @@ class SuggestionTest {
     @Test
     fun `Daily rrule should be picked up`() {
         val mockPrefs = mockk<Preferences>()
-        val page = getPage()
-        val doc = getPdf(page)
+        val page = getRotatedA4Page()
+        val doc = getDocumentOf(page)
 
         val rruleDescription = "PrintMe"
 
@@ -29,7 +29,7 @@ class SuggestionTest {
             ]
             """.trimIndent()
 
-        suggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
+        writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
 
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)
@@ -43,8 +43,8 @@ class SuggestionTest {
         val endLocalDateTimeTooLarge: LocalDateTime = startLocalDateTimeTooLarge.plusWeeks(1).minusNanos(1)
 
         val mockPrefs = mockk<Preferences>()
-        val page = getPage()
-        val doc = getPdf(page)
+        val page = getRotatedA4Page()
+        val doc = getDocumentOf(page)
 
         val rruleDescription = "PrintMe"
 
@@ -57,7 +57,7 @@ class SuggestionTest {
             ]
             """.trimIndent()
 
-        suggestions(doc, page, 0f, 0f, startLocalDateTimeTooLarge, endLocalDateTimeTooLarge, mockPrefs, true)
+        writeSuggestions(doc, page, 0f, 0f, startLocalDateTimeTooLarge, endLocalDateTimeTooLarge, mockPrefs, true)
 
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)
@@ -67,8 +67,8 @@ class SuggestionTest {
     @Test
     fun `Three daily rrule should be picked up`() {
         val mockPrefs = mockk<Preferences>()
-        val page = getPage()
-        val doc = getPdf(page)
+        val page = getRotatedA4Page()
+        val doc = getDocumentOf(page)
 
         every { mockPrefs.get(Prefs.ACTIVE_PROFILE.key, "0") } returns "1"
 
@@ -81,7 +81,7 @@ class SuggestionTest {
             ]
             """.trimIndent()
 
-        suggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
+        writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
 
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)
@@ -91,8 +91,8 @@ class SuggestionTest {
     @Test
     fun `Ignore faulty RRULE`() {
         val mockPrefs = mockk<Preferences>()
-        val page = getPage()
-        val doc = getPdf(page)
+        val page = getRotatedA4Page()
+        val doc = getDocumentOf(page)
 
         every { mockPrefs.get(Prefs.ACTIVE_PROFILE.key, "0") } returns "1"
 
@@ -104,7 +104,7 @@ class SuggestionTest {
             ]
             """.trimIndent()
 
-        suggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
+        writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
 
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)
@@ -114,8 +114,8 @@ class SuggestionTest {
     @Test
     fun `Ignore RRULE with non unique id`() {
         val mockPrefs = mockk<Preferences>()
-        val page = getPage()
-        val doc = getPdf(page)
+        val page = getRotatedA4Page()
+        val doc = getDocumentOf(page)
 
         every { mockPrefs.get(Prefs.ACTIVE_PROFILE.key, "0") } returns "1"
 
@@ -127,7 +127,7 @@ class SuggestionTest {
             ]
             """.trimIndent()
 
-        suggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
+        writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
 
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)
@@ -137,8 +137,8 @@ class SuggestionTest {
     @Test
     fun `Ignore RRULE of other profile`() {
         val mockPrefs = mockk<Preferences>()
-        val page = getPage()
-        val doc = getPdf(page)
+        val page = getRotatedA4Page()
+        val doc = getDocumentOf(page)
 
         every { mockPrefs.get(Prefs.ACTIVE_PROFILE.key, "0") } returns "1"
 
@@ -150,7 +150,7 @@ class SuggestionTest {
             ]
             """.trimIndent()
 
-        suggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
+        writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
 
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)
@@ -160,8 +160,8 @@ class SuggestionTest {
     @Test
     fun `Interval rule is processed correctly expect it at the beginning of period`() {
         val mockPrefs = mockk<Preferences>()
-        val page = getPage()
-        val doc = getPdf(page)
+        val page = getRotatedA4Page()
+        val doc = getDocumentOf(page)
 
         val startLocalDateTime = LocalDateTime.of(2024, 6, 9, 1, 0, 0)
         val endLocalDateTime = startLocalDateTime.plusWeeks(1).minusNanos(1)
@@ -176,7 +176,7 @@ class SuggestionTest {
             ]
             """.trimIndent()
 
-        suggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
+        writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
 
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)
@@ -186,8 +186,8 @@ class SuggestionTest {
     @Test
     fun `Interval rule is processed correctly expect it at the second pass of period`() {
         val mockPrefs = mockk<Preferences>()
-        val page = getPage()
-        val doc = getPdf(page)
+        val page = getRotatedA4Page()
+        val doc = getDocumentOf(page)
 
         val startLocalDateTime = LocalDateTime.of(2024, 9, 15, 1, 0, 0)
         val endLocalDateTime = startLocalDateTime.plusWeeks(1).minusNanos(1)
@@ -202,7 +202,7 @@ class SuggestionTest {
             ]
             """.trimIndent()
 
-        suggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
+        writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
 
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)

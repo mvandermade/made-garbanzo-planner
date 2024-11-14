@@ -25,13 +25,13 @@ fun isRRuleInDateTimeFrame(
 ): Boolean {
     val rrule = RecurrenceRule(rruleString)
 
-    val ofRule = OfRule(rrule, DateTime.parse(seed.format(formatterRecurLDT)))
+    val ofRuleSeed = OfRule(rrule, DateTime.parse(seed.format(formatterRecurLDT)))
 
     val fromDateTime = DateTime.parse(fromLocalDateTime.format(formatterRecurLDT))
     val endDateTime = DateTime.parse(endLocalDateTime.format(formatterRecurLDT))
 
     // Prevent infinite loops
-    val ofRuleIterator = ofRule.iterator()
+    val ofRuleIterator = ofRuleSeed.iterator()
     for (i in 0..1000) {
         if (!ofRuleIterator.hasNext()) {
             // Nothing found here...
