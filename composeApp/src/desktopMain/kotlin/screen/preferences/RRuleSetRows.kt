@@ -164,7 +164,7 @@ fun RRuleSetRows(
         Row {
             Column {
                 Button(onClick = { addRRule() }) {
-                    Text("+ RRule")
+                    Text("+ Recurrence rule")
                 }
             }
             Column {
@@ -176,6 +176,11 @@ fun RRuleSetRows(
                 if (rruleErrorMsg != "") {
                     Text(rruleErrorMsg, color = MaterialTheme.colors.error)
                 }
+            }
+        }
+        Row {
+            Column {
+                Text("There are some recurrence rule (RRule) generators like: https://jkbrzt.github.io/rrule")
             }
         }
         Row {

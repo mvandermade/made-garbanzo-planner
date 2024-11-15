@@ -40,7 +40,7 @@ class RRuleShouldBeActivated {
         // Disable auto popup of the PDF
         cr.onNodeWithContentDescription("auto-open-pdf").performClick()
 
-        cr.onNodeWithText("+ RRule").performClick()
+        cr.onNodeWithText("+ Recurrence rule").performClick()
 
         cr.onNodeWithContentDescription("RRule-1-description").performTextInput("TESTRRULE")
         cr.onNodeWithContentDescription("RRule-1-RRule").performTextInput("FREQ=DAILY")

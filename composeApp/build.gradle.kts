@@ -32,6 +32,10 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation("io.mockk:mockk:1.13.13")
+
+            implementation("org.junit.jupiter:junit-jupiter-api:5.11.3")
+            implementation("org.junit.jupiter:junit-jupiter-params:5.11.3")
+            implementation("org.junit.jupiter:junit-jupiter-engine:5.11.3")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

@@ -44,5 +44,5 @@ fun isRRuleInDateTimeFrame(
             return false
         }
     }
-    throw IllegalStateException("Too many loops, compact the RRule start date")
+    throw IllegalStateException("Too many loops, compact the recurrence rule start date")
 }
