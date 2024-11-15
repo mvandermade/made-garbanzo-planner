@@ -47,8 +47,8 @@ class RRuleShouldBeActivated {
 
         // Go back to menu and get PDF
         cr.onNodeWithText("Ga terug naar start").performClick()
-        cr.waitUntilText("Genereer PDF 📜(of druk op ENTER)")
-        cr.onNodeWithText("Genereer PDF 📜(of druk op ENTER)").performClick()
+        cr.waitUntilText("Genereer PDF 📜")
+        cr.onNodeWithText("Genereer PDF 📜").performClick()
 
         // Way of getting hold of the PDF is a text field hidden for most users
         val node = cr.onNodeWithContentDescription("pdfPath").fetchSemanticsNode()

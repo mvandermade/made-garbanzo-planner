@@ -61,7 +61,7 @@ class SuggestionTest {
 
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)
-        assertEquals("1: > !error PrintMe <0 regels...", text.trimEnd())
+        assertEquals("1: > !error PrintMe Too many loops, compact the RRule start date <0 regels...", text.trimEnd())
     }
 
     @Test
@@ -108,7 +108,7 @@ class SuggestionTest {
 
         val pdfTextStripper = PDFTextStripper()
         val text = pdfTextStripper.getText(doc)
-        assertEquals("2: > PrintMe <> !error NO_PRINT <", text.trimEnd())
+        assertEquals("2: > PrintMe <> !error NO_PRINT FREQ part is missing <", text.trimEnd())
     }
 
     @Test
