@@ -30,3 +30,6 @@ The settings screen, allowing to enter recurrence rules and finetune the applica
 ![PDF output](docs/images/settings.png)
 The recurrence rule section showing an error. The error will be handled in the planner as text too. The error is piped through from the library that is used to parse the recurrence rules
 ![PDF output](docs/images/settings_error.png)
+
+## Developer notes
+Best is to use the pre commit hook for ktlint, otherwise the CI will fail and it is embarassing (: You can "install" it by copying the pre-commit file to the .git/hooks directory or run the gradle task supplied by the root build.gradle.kts.
