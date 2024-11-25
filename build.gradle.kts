@@ -8,7 +8,7 @@ plugins {
 
 tasks.register<Copy>("copyPreCommitHook") {
     description = "Copy pre-commit git hook from the scripts to the .git/hooks folder."
-    group = "git hooks"
+    group = "githooks"
     outputs.upToDateWhen { false }
     filePermissions {
         user {
