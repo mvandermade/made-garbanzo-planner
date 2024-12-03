@@ -93,22 +93,22 @@ private fun writePage(
 ): BoxCoordinates {
     val bc1 = writeTimeColumn(doc, page, topLeftX, topLeftY, numberOfRows, fromHour, fromMinute, draw)
 
-    val bc2 = writeNoteColumn(doc, page, bc1.bottomRightX, topLeftY, DayOfWeek.MONDAY, numberOfRows, draw)
-    val bc3 = writeNoteColumn(doc, page, bc2.bottomRightX, topLeftY, DayOfWeek.TUESDAY, numberOfRows, draw)
+    val bc2 = writeNoteColumn(doc, page, bc1.bottomRightX, topLeftY, numberOfRows, DayOfWeek.MONDAY, draw)
+    val bc3 = writeNoteColumn(doc, page, bc2.bottomRightX, topLeftY, numberOfRows, DayOfWeek.TUESDAY, draw)
 
     val bc4 = writeTimeColumn(doc, page, bc3.bottomRightX, topLeftY, numberOfRows, fromHour, fromMinute, draw)
 
-    val bc5 = writeNoteColumn(doc, page, bc4.bottomRightX, topLeftY, DayOfWeek.WEDNESDAY, numberOfRows, draw)
-    val bc6 = writeNoteColumn(doc, page, bc5.bottomRightX, topLeftY, DayOfWeek.THURSDAY, numberOfRows, draw)
+    val bc5 = writeNoteColumn(doc, page, bc4.bottomRightX, topLeftY, numberOfRows, DayOfWeek.WEDNESDAY, draw)
+    val bc6 = writeNoteColumn(doc, page, bc5.bottomRightX, topLeftY, numberOfRows, DayOfWeek.THURSDAY, draw)
 
     val bc7 = writeTimeColumn(doc, page, bc6.bottomRightX, topLeftY, numberOfRows, fromHour, fromMinute, draw)
 
-    val bc8 = writeNoteColumn(doc, page, bc7.bottomRightX, topLeftY, DayOfWeek.FRIDAY, numberOfRows, draw)
-    val bc9 = writeNoteColumn(doc, page, bc8.bottomRightX, topLeftY, DayOfWeek.SATURDAY, numberOfRows, draw)
+    val bc8 = writeNoteColumn(doc, page, bc7.bottomRightX, topLeftY, numberOfRows, DayOfWeek.FRIDAY, draw)
+    val bc9 = writeNoteColumn(doc, page, bc8.bottomRightX, topLeftY, numberOfRows, DayOfWeek.SATURDAY, draw)
 
     val bc10 = writeTimeColumn(doc, page, bc9.bottomRightX, topLeftY, numberOfRows, fromHour, fromMinute, draw)
 
-    val bc11 = writeNoteColumn(doc, page, bc10.bottomRightX, topLeftY, DayOfWeek.SUNDAY, numberOfRows, draw)
+    val bc11 = writeNoteColumn(doc, page, bc10.bottomRightX, topLeftY, numberOfRows, DayOfWeek.SUNDAY, draw)
 
     return BoxCoordinates(bc1.topLeftX, bc1.topLeftY, bc11.bottomRightX, bc11.bottomRightY)
 }

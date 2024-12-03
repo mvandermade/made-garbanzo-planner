@@ -123,8 +123,8 @@ fun writeNoteColumn(
     page: PDPage,
     topLeftX: Float,
     topLeftY: Float,
-    dayOfWeek: DayOfWeek,
     numberOfRows: Int,
+    dayOfWeek: DayOfWeek,
     draw: Boolean = true,
 ): BoxCoordinates {
     val day =
