@@ -1,16 +1,13 @@
-import kotlinx.serialization.json.Json
 import model.BoxCoordinates
-import model.Prefs
-import model.RRuleSet
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts
+import repositories.PreferencesStore
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoField
-import java.util.prefs.Preferences
 import kotlin.math.floor
 
 fun writeSuggestions(
@@ -20,40 +17,49 @@ fun writeSuggestions(
     topLeftY: Float,
     fromLocalDateTime: LocalDateTime,
     endLocalDateTime: LocalDateTime,
-    prefs: Preferences,
+    preferencesStore: PreferencesStore,
     draw: Boolean = true,
 ): BoxCoordinates {
-    val list = Json.decodeFromString<List<RRuleSet>>(prefs.get(Prefs.RRULE_SETS.key, "[]"))
+    val list = preferencesStore.rruleSets
     val rruleSetsSet =
         list
-            .filter { it.profileId == prefs.get(Prefs.ACTIVE_PROFILE.key, "0").toLong() }
+            .filter { it.profileId == preferencesStore.activeProfile }
             .sortedBy { it.id }
             .toMutableSet()
 
-    var text = "${rruleSetsSet.size}: "
-    // Remove the smallest imaginable entity to make it non-inclusive
-
     var counter = 0
+    val entries = mutableListOf<String>()
+
     rruleSetsSet.forEach { rruleSet ->
         try {
             val seed = LocalDateTime.parse(rruleSet.fromLDT, formatterLDT)
             if (isRRuleInDateTimeFrame(rruleSet.rrule, seed, fromLocalDateTime, endLocalDateTime)) {
-                text += "> ${rruleSet.description} <"
+                entries += rruleSet.description
                 counter++
             }
         } catch (e: Exception) {
-            text += "> !error ${rruleSet.description} ${e.message} <"
+            entries += "!error ${rruleSet.description} ${e.message}"
         }
     }
 
-    if (counter == 0) {
-        text += "0 regels..."
+    var countAndDescriptions = "$counter/${rruleSetsSet.size}"
+    if (entries.isNotEmpty()) {
+        countAndDescriptions += " " + entries.joinToString(prefix = "» ", postfix = " «", separator = ", ")
     }
 
     val font = PDType1Font(Standard14Fonts.FontName.COURIER)
     val fontSize = 12f
     val verticalSpacing = 25f
-    return writeText(doc, page, topLeftX, topLeftY - verticalSpacing, text, font, fontSize, draw)
+    return writeText(
+        doc,
+        page,
+        topLeftX,
+        topLeftY - verticalSpacing,
+        countAndDescriptions,
+        font,
+        fontSize,
+        draw,
+    )
 }
 
 fun writeHeader(

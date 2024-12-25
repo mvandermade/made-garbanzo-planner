@@ -13,45 +13,29 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
-import kotlinx.serialization.json.Json
-import model.Prefs
-import model.Profile
-import java.util.prefs.Preferences
+import repositories.PreferencesStore
 
 @Composable
 fun ProfilesColumn(
-    prefs: Preferences,
-    activeProfile: MutableState<String>,
+    preferencesStore: PreferencesStore,
+    activeProfile: MutableState<Long>,
 ) {
-    val profilesString by remember {
+    val profilesSet by remember {
         mutableStateOf(
-            prefs.get(
-                Prefs.PROFILES.key,
-                """
-                [{"id":1, "name":"Profile1"}, {"id":2, "name":"Profile2"}]
-                """.trimIndent(),
-            ),
+            preferencesStore.profiles,
         )
     }
-
-    // Enforce the equals method
-    val profilesSet =
-        try {
-            Json.decodeFromString<List<Profile>>(profilesString).toSet()
-        } catch (e: Exception) {
-            mutableSetOf()
-        }
 
     Column(Modifier.fillMaxWidth(0.5f)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             profilesSet.map { profile ->
-                RadioButton(selected = activeProfile.value.toLong() == profile.id, onClick = {
-                    activeProfile.value = profile.id.toString()
-                    prefs.put(Prefs.ACTIVE_PROFILE.key, activeProfile.value)
+                RadioButton(selected = activeProfile.value == profile.id, onClick = {
+                    preferencesStore.activeProfile = activeProfile.value
+                    activeProfile.value = profile.id
                 })
                 ClickableText(AnnotatedString(profile.name), onClick = {
-                    activeProfile.value = profile.id.toString()
-                    prefs.put(Prefs.ACTIVE_PROFILE.key, activeProfile.value)
+                    preferencesStore.activeProfile = activeProfile.value
+                    activeProfile.value = profile.id
                 })
             }
         }

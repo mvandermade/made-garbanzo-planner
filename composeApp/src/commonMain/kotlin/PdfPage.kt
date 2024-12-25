@@ -1,20 +1,19 @@
 import model.BoxCoordinates
-import model.Prefs
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
+import repositories.PreferencesStore
 import java.awt.Desktop
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.temporal.TemporalAdjusters
-import java.util.prefs.Preferences
 
-fun writeAndOpenMainDocument(prefs: Preferences): String {
+fun writeAndOpenMainDocument(preferencesStore: PreferencesStore): String {
     val page = getRotatedA4Page()
     val doc = getDocumentOf(page)
 
-    writeMainDocument(prefs, doc, page)
+    writeMainDocument(preferencesStore, doc, page)
 
     val tempFile = kotlin.io.path.createTempFile("planner-101-", suffix = ".pdf").toFile()
     tempFile.deleteOnExit()
@@ -22,7 +21,7 @@ fun writeAndOpenMainDocument(prefs: Preferences): String {
     doc.save(tempFile)
     doc.close()
 
-    if (prefs.getBoolean(Prefs.AUTO_OPEN_PDF.key, true)) {
+    if (preferencesStore.autoOpenPDFAfterGenerationIsEnabled) {
         // Testers can use this to remain headless
         Desktop.getDesktop().open(tempFile)
     }
@@ -31,12 +30,12 @@ fun writeAndOpenMainDocument(prefs: Preferences): String {
 }
 
 fun writeMainDocument(
-    prefs: Preferences,
+    preferencesStore: PreferencesStore,
     doc: PDDocument,
     page: PDPage,
 ) {
     val timeProvider = TimeProvider()
-    val fromLocalDateTime = getFromLDT(prefs, timeProvider)
+    val fromLocalDateTime = getFromLDT(preferencesStore, timeProvider)
 
     val fromNextMonday = pickNextMonday(fromLocalDateTime)
 
@@ -56,7 +55,7 @@ fun writeMainDocument(
     val topLeftX = page.mediaBox.width / 2 - (tableWidth / 2)
     val bcPage = writePage(doc, page, topLeftX, bcHeader.bottomRightY - 20, numberOfRows, fromHour, fromMinute, true)
 
-    writeSuggestions(doc, page, topLeftX, bcPage.bottomRightY, fromNextMonday, endLocalDateTime, prefs, true)
+    writeSuggestions(doc, page, topLeftX, bcPage.bottomRightY, fromNextMonday, endLocalDateTime, preferencesStore, true)
 }
 
 fun pickNextMonday(localDateTime: LocalDateTime): LocalDateTime {
@@ -66,12 +65,12 @@ fun pickNextMonday(localDateTime: LocalDateTime): LocalDateTime {
 }
 
 fun getFromLDT(
-    prefs: Preferences,
+    preferencesStore: PreferencesStore,
     timeProvider: TimeProvider,
 ): LocalDateTime {
-    return if (prefs.getBoolean(Prefs.START_DATE_ENABLED.key, false)) {
+    return if (preferencesStore.startDateIsEnabled) {
         try {
-            val localDate = LocalDate.parse(prefs.get(Prefs.START_DATE.key, ""), formatterLD)
+            val localDate = LocalDate.parse(preferencesStore.startDate, formatterLD)
             LocalDateTime.of(localDate, LocalTime.MIDNIGHT)
         } catch (e: Exception) {
             timeProvider.getLocalDateTimeNow()

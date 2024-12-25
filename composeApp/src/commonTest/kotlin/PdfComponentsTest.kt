@@ -1,13 +1,14 @@
-import io.mockk.every
 import io.mockk.mockk
-import model.Prefs
+import model.RRuleSetV1
+import model.preferences.PreferencesV1
+import nl.wykorijnsburger.kminrandom.minRandom
 import org.apache.pdfbox.text.PDFTextStripper
 import org.junit.experimental.runners.Enclosed
 import org.junit.jupiter.api.Nested
 import org.junit.runner.RunWith
+import repositories.PreferencesStore
 import java.time.DayOfWeek
 import java.time.LocalDateTime
-import java.util.prefs.Preferences
 import kotlin.math.floor
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,53 +24,55 @@ class PdfComponentsTest {
 
         @Test
         fun `Daily rrule should be picked up`() {
-            val mockPrefs = mockk<Preferences>()
+            val rruleDescription = "PrintMe"
+            val preferencesV1 =
+                minRandom<PreferencesV1>().apply {
+                    activeProfile = 1
+                    rruleSets =
+                        setOf(
+                            RRuleSetV1(
+                                profileId = 1, id = 2, description = rruleDescription,
+                                rrule = "FREQ=DAILY", fromLDT = entryLocalDateTimeString,
+                            ),
+                        )
+                }
+            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 
-            val rruleDescription = "PrintMe"
-
-            every { mockPrefs.get(Prefs.ACTIVE_PROFILE.key, "0") } returns "1"
-
-            every { mockPrefs.get(Prefs.RRULE_SETS.key, "[]") } returns
-                """
-                [
-                { "profileId": 1, "id": 2, "description": "$rruleDescription", "rrule": "FREQ=DAILY", "fromLDT": "$entryLocalDateTimeString" }
-                ]
-                """.trimIndent()
-
-            writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
+            writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, preferenceStore, true)
 
             val pdfTextStripper = PDFTextStripper()
             val text = pdfTextStripper.getText(doc)
-            assertEquals("1: > $rruleDescription <", text.trimEnd())
+            assertEquals("1/1 » $rruleDescription «", text.trimEnd())
         }
 
         @Test
         fun `Daily rrule should be picked up and box should match`() {
-            val mockPrefs = mockk<Preferences>()
+            val rruleDescription = "PrintMe"
+            val preferencesV1 =
+                minRandom<PreferencesV1>().apply {
+                    activeProfile = 1
+                    rruleSets =
+                        setOf(
+                            RRuleSetV1(
+                                profileId = 1, id = 2, description = rruleDescription,
+                                rrule = "FREQ=DAILY", fromLDT = entryLocalDateTimeString,
+                            ),
+                        )
+                }
+            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 
-            val rruleDescription = "PrintMe"
-
-            every { mockPrefs.get(Prefs.ACTIVE_PROFILE.key, "0") } returns "1"
-
-            every { mockPrefs.get(Prefs.RRULE_SETS.key, "[]") } returns
-                """
-                [
-                { "profileId": 1, "id": 2, "description": "$rruleDescription", "rrule": "FREQ=DAILY", "fromLDT": "$entryLocalDateTimeString" }
-                ]
-                """.trimIndent()
-
-            val box = writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
+            val box = writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, preferenceStore, true)
 
             val pdfTextStripper = PDFTextStripper()
             val text = pdfTextStripper.getText(doc)
-            assertEquals("1: > $rruleDescription <", text.trimEnd())
+            assertEquals("1/1 » $rruleDescription «", text.trimEnd())
             assertEquals(0f, box.topLeftX)
             assertEquals(-19f, floor(box.topLeftY))
-            assertEquals(100f, floor(box.bottomRightX))
+            assertEquals(108f, floor(box.bottomRightX))
             assertEquals(-27f, floor(box.bottomRightY))
         }
 
@@ -79,63 +82,75 @@ class PdfComponentsTest {
             val startLocalDateTimeTooLarge: LocalDateTime = LocalDateTime.of(2025, 1, 1, 1, 0, 0)
             val endLocalDateTimeTooLarge: LocalDateTime = startLocalDateTimeTooLarge.plusWeeks(1).minusNanos(1)
 
-            val mockPrefs = mockk<Preferences>()
+            val rruleDescription = "PrintMe"
+            val preferencesV1 =
+                minRandom<PreferencesV1>().apply {
+                    activeProfile = 1
+                    rruleSets =
+                        setOf(
+                            RRuleSetV1(
+                                profileId = 1, id = 2, description = rruleDescription,
+                                rrule = "FREQ=DAILY", fromLDT = entryLocalDateTimeString,
+                            ),
+                        )
+                }
+            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 
-            val rruleDescription = "PrintMe"
-
-            every { mockPrefs.get(Prefs.ACTIVE_PROFILE.key, "0") } returns "1"
-
-            every { mockPrefs.get(Prefs.RRULE_SETS.key, "[]") } returns
-                """
-                [
-                { "profileId": 1, "id": 2, "description": "$rruleDescription", "rrule": "FREQ=DAILY", "fromLDT": "$entryLocalDateTimeString" }
-                ]
-                """.trimIndent()
-
-            writeSuggestions(doc, page, 0f, 0f, startLocalDateTimeTooLarge, endLocalDateTimeTooLarge, mockPrefs, true)
+            writeSuggestions(
+                doc,
+                page,
+                0f,
+                0f,
+                startLocalDateTimeTooLarge,
+                endLocalDateTimeTooLarge,
+                preferenceStore,
+                true,
+            )
 
             val pdfTextStripper = PDFTextStripper()
             val text = pdfTextStripper.getText(doc)
             assertEquals(
-                "1: > !error PrintMe Too many loops, compact the recurrence rule start date <0 regels...",
+                "0/1 » !error PrintMe Too many loops, compact the recurrence rule start date «",
                 text.trimEnd(),
             )
         }
 
         @Test
         fun `Three daily rrule should be picked up`() {
-            val mockPrefs = mockk<Preferences>()
+            val preferencesV1 =
+                minRandom<PreferencesV1>().apply {
+                    activeProfile = 1
+                    rruleSets =
+                        setOf(
+                            RRuleSetV1(
+                                profileId = 1, id = 2, description = "PrintMe",
+                                rrule = "FREQ=DAILY", fromLDT = entryLocalDateTimeString,
+                            ),
+                            RRuleSetV1(
+                                profileId = 1, id = 44, description = "PrintMe2",
+                                rrule = "FREQ=DAILY", fromLDT = entryLocalDateTimeString,
+                            ),
+                            RRuleSetV1(
+                                profileId = 1, id = 60, description = "PrintMe3",
+                                rrule = "FREQ=DAILY", fromLDT = entryLocalDateTimeString,
+                            ),
+                        )
+                }
+            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 
-            every { mockPrefs.get(Prefs.ACTIVE_PROFILE.key, "0") } returns "1"
-
-            every { mockPrefs.get(Prefs.RRULE_SETS.key, "[]") } returns
-                """
-                [
-                { "profileId": 1, "id": 2, "description": "PrintMe", "rrule": "FREQ=DAILY", "fromLDT": "$entryLocalDateTimeString" },
-                { "profileId": 1, "id": 44, "description": "PrintMe2", "rrule": "FREQ=DAILY", "fromLDT": "$entryLocalDateTimeString" },
-                { "profileId": 1, "id": 60, "description": "PrintMe3", "rrule": "FREQ=DAILY", "fromLDT": "$entryLocalDateTimeString" }
-                ]
-                """.trimIndent()
-
-            writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
+            writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, preferenceStore, true)
 
             val pdfTextStripper = PDFTextStripper()
             val text = pdfTextStripper.getText(doc)
-            assertEquals("3: > PrintMe <> PrintMe2 <> PrintMe3 <", text.trimEnd())
+            assertEquals("3/3 » PrintMe, PrintMe2, PrintMe3 «", text.trimEnd())
         }
 
         @Test
         fun `No hit in current timeframe`() {
-            val mockPrefs = mockk<Preferences>()
-            val page = getRotatedA4Page()
-            val doc = getDocumentOf(page)
-
-            every { mockPrefs.get(Prefs.ACTIVE_PROFILE.key, "0") } returns "1"
-
             val entryLocalDateTimeString: String =
                 LocalDateTime.of(
                     2021,
@@ -145,162 +160,165 @@ class PdfComponentsTest {
                     0,
                     0,
                 ).plusWeeks(1).format(formatterLDT)
+            val preferencesV1 =
+                minRandom<PreferencesV1>().apply {
+                    activeProfile = 1
+                    rruleSets =
+                        setOf(
+                            RRuleSetV1(
+                                profileId = 1, id = 2, description = "PrintMe",
+                                rrule = "FREQ=MONTHLY", fromLDT = entryLocalDateTimeString,
+                            ),
+                        )
+                }
+            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
+            val page = getRotatedA4Page()
+            val doc = getDocumentOf(page)
 
-            every { mockPrefs.get(Prefs.RRULE_SETS.key, "[]") } returns
-                """
-                [
-                { "profileId": 1, "id": 2, "description": "PrintMe", "rrule": "FREQ=MONTHLY", "fromLDT": "$entryLocalDateTimeString" }
-                ]
-                """.trimIndent()
-
-            writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs)
+            writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, preferenceStore)
 
             val pdfTextStripper = PDFTextStripper()
             val text = pdfTextStripper.getText(doc)
-            assertEquals("1: 0 regels...", text.trimEnd())
+            assertEquals("0/1", text.trimEnd())
         }
 
         @Test
         fun `Ignore faulty RRULE`() {
-            val mockPrefs = mockk<Preferences>()
+            val preferencesV1 =
+                minRandom<PreferencesV1>().apply {
+                    activeProfile = 1
+                    rruleSets =
+                        setOf(
+                            RRuleSetV1(
+                                profileId = 1, id = 2, description = "PrintMe",
+                                rrule = "FREQ=DAILY", fromLDT = entryLocalDateTimeString,
+                            ),
+                            RRuleSetV1(
+                                profileId = 1, id = 3, description = "NO_PRINT",
+                                rrule = "OOPS", fromLDT = entryLocalDateTimeString,
+                            ),
+                        )
+                }
+            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 
-            every { mockPrefs.get(Prefs.ACTIVE_PROFILE.key, "0") } returns "1"
-
-            every { mockPrefs.get(Prefs.RRULE_SETS.key, "[]") } returns
-                """
-                [
-                { "profileId": 1, "id": 2, "description": "PrintMe", "rrule": "FREQ=DAILY", "fromLDT": "$entryLocalDateTimeString" },
-                { "profileId": 1, "id": 3, "description": "NO_PRINT", "rrule": "BIG_OOF", "fromLDT": "$entryLocalDateTimeString" }
-                ]
-                """.trimIndent()
-
-            writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
+            writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, preferenceStore, true)
 
             val pdfTextStripper = PDFTextStripper()
             val text = pdfTextStripper.getText(doc)
-            assertEquals("2: > PrintMe <> !error NO_PRINT FREQ part is missing <", text.trimEnd())
-        }
-
-        @Test
-        fun `Ignore RRULE with non unique id`() {
-            val mockPrefs = mockk<Preferences>()
-            val page = getRotatedA4Page()
-            val doc = getDocumentOf(page)
-
-            every { mockPrefs.get(Prefs.ACTIVE_PROFILE.key, "0") } returns "1"
-
-            every { mockPrefs.get(Prefs.RRULE_SETS.key, "[]") } returns
-                """
-                [
-                { "profileId": 1, "id": 2, "description": "PrintMe", "rrule": "FREQ=DAILY", "fromLDT": "$entryLocalDateTimeString" },
-                { "profileId": 1, "id": 2, "description": "NO_PRINT", "rrule": "FREQ=DAILY", "fromLDT": "$entryLocalDateTimeString" }
-                ]
-                """.trimIndent()
-
-            writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
-
-            val pdfTextStripper = PDFTextStripper()
-            val text = pdfTextStripper.getText(doc)
-            assertEquals("1: > PrintMe <", text.trimEnd())
+            assertEquals("1/2 » PrintMe, !error NO_PRINT FREQ part is missing «", text.trimEnd())
         }
 
         @Test
         fun `Ignore RRULE of other profile`() {
-            val mockPrefs = mockk<Preferences>()
+            val preferencesV1 =
+                minRandom<PreferencesV1>().apply {
+                    activeProfile = 1
+                    rruleSets =
+                        setOf(
+                            RRuleSetV1(
+                                profileId = 1, id = 2, description = "PrintMe",
+                                rrule = "FREQ=DAILY", fromLDT = entryLocalDateTimeString,
+                            ),
+                            RRuleSetV1(
+                                profileId = 2, id = 3, description = "NO_PRINT",
+                                rrule = "FREQ=DAILY", fromLDT = entryLocalDateTimeString,
+                            ),
+                        )
+                }
+            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 
-            every { mockPrefs.get(Prefs.ACTIVE_PROFILE.key, "0") } returns "1"
-
-            every { mockPrefs.get(Prefs.RRULE_SETS.key, "[]") } returns
-                """
-                [
-                { "profileId": 1, "id": 2, "description": "PrintMe", "rrule": "FREQ=DAILY", "fromLDT": "$entryLocalDateTimeString" },
-                { "profileId": 2, "id": 3, "description": "NO_PRINT", "rrule": "FREQ=DAILY", "fromLDT": "$entryLocalDateTimeString" }
-                ]
-                """.trimIndent()
-
-            writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
+            writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, preferenceStore, true)
 
             val pdfTextStripper = PDFTextStripper()
             val text = pdfTextStripper.getText(doc)
-            assertEquals("1: > PrintMe <", text.trimEnd())
+            assertEquals("1/1 » PrintMe «", text.trimEnd())
         }
 
         @Test
         fun `Interval rule is processed correctly expect it at the beginning of period`() {
-            val mockPrefs = mockk<Preferences>()
+            val entryLocalDateTimeString = LocalDateTime.of(2024, 6, 15, 1, 0, 0).format(formatterLDT)
+
+            val preferencesV1 =
+                minRandom<PreferencesV1>().apply {
+                    activeProfile = 1
+                    rruleSets =
+                        setOf(
+                            RRuleSetV1(
+                                profileId = 1, id = 2, description = "PrintMe",
+                                rrule = "INTERVAL=3;FREQ=MONTHLY;BYDAY=3SA", fromLDT = entryLocalDateTimeString,
+                            ),
+                        )
+                }
+            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 
             val startLocalDateTime = LocalDateTime.of(2024, 6, 9, 1, 0, 0)
             val endLocalDateTime = startLocalDateTime.plusWeeks(1).minusNanos(1)
-            val entryLocalDateTimeString = LocalDateTime.of(2024, 6, 15, 1, 0, 0).format(formatterLDT)
 
-            every { mockPrefs.get(Prefs.ACTIVE_PROFILE.key, "0") } returns "1"
-
-            every { mockPrefs.get(Prefs.RRULE_SETS.key, "[]") } returns
-                """
-                [
-                { "profileId": 1, "id": 2, "description": "PrintMe", "rrule": "INTERVAL=3;FREQ=MONTHLY;BYDAY=3SA", "fromLDT": "$entryLocalDateTimeString" }
-                ]
-                """.trimIndent()
-
-            writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
+            writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, preferenceStore, true)
 
             val pdfTextStripper = PDFTextStripper()
             val text = pdfTextStripper.getText(doc)
-            assertEquals("1: > PrintMe <", text.trimEnd())
+            assertEquals("1/1 » PrintMe «", text.trimEnd())
         }
 
         @Test
         fun `Interval rule is processed correctly expect it at the second pass of period`() {
-            val mockPrefs = mockk<Preferences>()
+            val entryLocalDateTimeString = LocalDateTime.of(2024, 6, 15, 1, 0, 0).format(formatterLDT)
+
+            val preferencesV1 =
+                minRandom<PreferencesV1>().apply {
+                    activeProfile = 1
+                    rruleSets =
+                        setOf(
+                            RRuleSetV1(
+                                profileId = 1, id = 2, description = "PrintMe",
+                                rrule = "INTERVAL=3;FREQ=MONTHLY;BYDAY=3SA", fromLDT = entryLocalDateTimeString,
+                            ),
+                        )
+                }
+            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 
             val startLocalDateTime = LocalDateTime.of(2024, 9, 15, 1, 0, 0)
             val endLocalDateTime = startLocalDateTime.plusWeeks(1).minusNanos(1)
-            val entryLocalDateTimeString = LocalDateTime.of(2024, 6, 15, 1, 0, 0).format(formatterLDT)
 
-            every { mockPrefs.get(Prefs.ACTIVE_PROFILE.key, "0") } returns "1"
-
-            every { mockPrefs.get(Prefs.RRULE_SETS.key, "[]") } returns
-                """
-                [
-                { "profileId": 1, "id": 2, "description": "PrintMe", "rrule": "INTERVAL=3;FREQ=MONTHLY;BYDAY=3SA", "fromLDT": "$entryLocalDateTimeString" }
-                ]
-                """.trimIndent()
-
-            writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, true)
+            writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, preferenceStore, true)
 
             val pdfTextStripper = PDFTextStripper()
             val text = pdfTextStripper.getText(doc)
-            assertEquals("1: > PrintMe <", text.trimEnd())
+            assertEquals("1/1 » PrintMe «", text.trimEnd())
         }
 
         @Test
         fun `Draw only should yield the correct box`() {
-            val mockPrefs = mockk<Preferences>()
+            val entryLocalDateTimeString = LocalDateTime.of(2024, 6, 15, 1, 0, 0).format(formatterLDT)
+
+            val preferencesV1 =
+                minRandom<PreferencesV1>().apply {
+                    activeProfile = 1
+                    rruleSets =
+                        setOf(
+                            RRuleSetV1(
+                                profileId = 1, id = 2, description = "PrintMe",
+                                rrule = "INTERVAL=3;FREQ=MONTHLY;BYDAY=3SA", fromLDT = entryLocalDateTimeString,
+                            ),
+                        )
+                }
+            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 
             val startLocalDateTime = LocalDateTime.of(2024, 9, 15, 1, 0, 0)
             val endLocalDateTime = startLocalDateTime.plusWeeks(1).minusNanos(1)
-            val entryLocalDateTimeString = LocalDateTime.of(2024, 6, 15, 1, 0, 0).format(formatterLDT)
 
-            every { mockPrefs.get(Prefs.ACTIVE_PROFILE.key, "0") } returns "1"
-
-            every { mockPrefs.get(Prefs.RRULE_SETS.key, "[]") } returns
-                """
-                [
-                { "profileId": 1, "id": 2, "description": "PrintMe", "rrule": "INTERVAL=3;FREQ=MONTHLY;BYDAY=3SA", "fromLDT": "$entryLocalDateTimeString" }
-                ]
-                """.trimIndent()
-
-            writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, mockPrefs, false)
+            writeSuggestions(doc, page, 0f, 0f, startLocalDateTime, endLocalDateTime, preferenceStore, false)
 
             val pdfTextStripper = PDFTextStripper()
             val text = pdfTextStripper.getText(doc)

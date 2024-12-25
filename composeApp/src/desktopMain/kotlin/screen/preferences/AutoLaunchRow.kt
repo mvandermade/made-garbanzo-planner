@@ -14,13 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import model.Prefs
-import java.util.prefs.Preferences
+import repositories.PreferencesStore
 
 @Composable
-fun AutoLaunchRow(prefs: Preferences) {
-    var autoStart by remember { mutableStateOf(prefs.getBoolean(Prefs.ON_STARTUP_OPEN_PDF.key, false)) }
-    var autoOpen by remember { mutableStateOf(prefs.getBoolean(Prefs.AUTO_OPEN_PDF.key, true)) }
+fun AutoLaunchRow(preferencesStore: PreferencesStore) {
+    var autoStart by remember { mutableStateOf(preferencesStore.onStartUpOpenPDF) }
+    var autoOpen by remember { mutableStateOf(preferencesStore.autoOpenPDFAfterGenerationIsEnabled) }
 
     Row {
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -29,8 +28,8 @@ fun AutoLaunchRow(prefs: Preferences) {
                 Checkbox(
                     checked = autoStart,
                     onCheckedChange = {
+                        preferencesStore.onStartUpOpenPDF = it
                         autoStart = it
-                        prefs.putBoolean(Prefs.ON_STARTUP_OPEN_PDF.key, it)
                     },
                 )
             }
@@ -39,8 +38,8 @@ fun AutoLaunchRow(prefs: Preferences) {
                 Checkbox(
                     checked = autoOpen,
                     onCheckedChange = {
+                        preferencesStore.autoOpenPDFAfterGenerationIsEnabled = it
                         autoOpen = it
-                        prefs.putBoolean(Prefs.AUTO_OPEN_PDF.key, it)
                     },
                     modifier =
                         Modifier.semantics {

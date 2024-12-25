@@ -3,7 +3,7 @@ package model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RRuleSet(
+data class RRuleSetV1(
     val profileId: Long,
     val id: Long,
     val description: String,
@@ -11,7 +11,7 @@ data class RRuleSet(
     val fromLDT: String,
 ) {
     // Only compare on id
-    override fun equals(other: Any?): Boolean = (other is RRuleSet) && (this.id == other.id)
+    override fun equals(other: Any?): Boolean = (other is RRuleSetV1) && (this.id == other.id)
 
     override fun hashCode(): Int {
         return id.hashCode()

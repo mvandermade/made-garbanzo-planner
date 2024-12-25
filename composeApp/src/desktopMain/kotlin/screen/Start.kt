@@ -18,22 +18,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import model.AppState
-import model.Prefs
+import repositories.PreferencesStore
 import screen.preferences.ProfilesColumn
 import screen.start.DatePickerRow
 import writeAndOpenMainDocument
-import java.util.prefs.Preferences
 
 @Composable
 fun start(
     requestNewAppState: (appState: AppState) -> Unit,
-    prefs: Preferences,
+    preferencesStore: PreferencesStore,
 ) {
-    val activeProfile = remember { mutableStateOf(prefs.get(Prefs.ACTIVE_PROFILE.key, "0")) }
+    val activeProfile = remember { mutableStateOf(preferencesStore.activeProfile) }
     var pdfPath by remember { mutableStateOf("") }
 
     MaterialTheme {
-        ProfilesColumn(prefs, activeProfile)
+        ProfilesColumn(preferencesStore, activeProfile)
         Column {
             Row {
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -45,13 +44,13 @@ fun start(
             Row {
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Button(onClick = {
-                        pdfPath = writeAndOpenMainDocument(prefs)
+                        pdfPath = writeAndOpenMainDocument(preferencesStore)
                     }) {
                         Text("Genereer PDF 📜")
                     }
                 }
             }
-            if (!prefs.getBoolean(Prefs.AUTO_OPEN_PDF.key, true)) {
+            if (!preferencesStore.autoOpenPDFAfterGenerationIsEnabled) {
                 // For now this is used for testing only, maybe some users will like it too after setting it
                 Divider()
                 Row {
@@ -69,7 +68,7 @@ fun start(
                 }
             }
             Divider()
-            DatePickerRow(prefs)
+            DatePickerRow(preferencesStore)
         }
     }
 }

@@ -1,13 +1,13 @@
-import androidx.compose.ui.input.key.key
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import model.Prefs
-import preferences.PreferencesStore
+import preferences.PreferencesStoreRaw
+import preferences.migratePreferences
+import repositories.PreferencesStore
 import java.util.prefs.Preferences
 
 fun main() {
-    val prefs = Preferences.userRoot().node(PreferencesStore::class.java.name)
+    val preferences = Preferences.userRoot().node(PreferencesStoreRaw::class.java.name)
 
     application {
         Window(
@@ -15,9 +15,12 @@ fun main() {
             onCloseRequest = ::exitApplication,
             title = "made-garbanzo-planner ${System.getProperty("jpackage.app-version") ?: ""}",
         ) {
-            App(prefs)
-            if (prefs.getBoolean(Prefs.ON_STARTUP_OPEN_PDF.key, false)) {
-                writeAndOpenMainDocument(prefs)
+            val preferencesStoreRaw = PreferencesStoreRaw(preferences)
+            migratePreferences(preferencesStoreRaw)
+            val preferencesStore = PreferencesStore(preferences, preferencesStoreRaw.readV1())
+            App(preferencesStore)
+            if (preferencesStore.onStartUpOpenPDF) {
+                writeAndOpenMainDocument(preferencesStore)
             }
         }
     }

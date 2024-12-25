@@ -21,62 +21,56 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import formatterLDT
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import model.Prefs
-import model.RRuleSet
+import model.RRuleSetV1
 import org.dmfs.rfc5545.recur.RecurrenceRule
+import repositories.PreferencesStore
 import java.time.LocalDateTime
 import java.util.*
-import java.util.prefs.Preferences
 import kotlin.concurrent.schedule
 
 @Composable
 fun RRuleSetRows(
-    prefs: Preferences,
-    activeProfile: MutableState<String>,
+    preferencesStore: PreferencesStore,
+    activeProfile: MutableState<Long>,
 ) {
     var rruleErrorMsgTimer by remember { mutableStateOf<TimerTask?>(null) }
     var saveMsgTimer by remember { mutableStateOf<TimerTask?>(null) }
-    var rruleSetsString by remember { mutableStateOf(prefs.get(Prefs.RRULE_SETS.key, "[]")) }
+    var rruleSets = remember { mutableStateOf(preferencesStore.rruleSets) }
     var rruleErrorMsg by remember { mutableStateOf("") }
     var saveMsg by remember { mutableStateOf("") }
 
-    // Enforce the equals method
-    val rruleSetsSet =
-        try {
-            Json.decodeFromString<List<RRuleSet>>(rruleSetsString).toMutableSet()
-        } catch (e: Exception) {
-            mutableSetOf()
-        }
-
-    fun updateRRuleStateFromSet() {
-        val content = Json.encodeToString(rruleSetsSet)
-        prefs.put(Prefs.RRULE_SETS.key, content)
-        rruleSetsString = content
-    }
-
     fun addRRule() {
-        val element = rruleSetsSet.maxByOrNull { it.id }
+        val element = rruleSets.value.maxByOrNull { it.id }
         val newId =
             if (element == null) {
-                1
+                1L
             } else {
                 element.id + 1
             }
-        rruleSetsSet += RRuleSet(activeProfile.value.toLong(), newId, "", "", LocalDateTime.now().format(formatterLDT))
-        updateRRuleStateFromSet()
+        val rruleSetsMutable = rruleSets.value.toMutableSet()
+        rruleSetsMutable +=
+            RRuleSetV1(
+                activeProfile.value.toLong(),
+                newId,
+                "",
+                "",
+                LocalDateTime.now().format(formatterLDT),
+            )
+        preferencesStore.rruleSets = rruleSets.value
+        rruleSets.value = rruleSetsMutable
     }
 
     fun saveRRuleDescription(
         id: Long,
         description: String,
     ) {
-        val rrule = rruleSetsSet.find { it.id == id } ?: return
+        val rrule = rruleSets.value.find { it.id == id } ?: return
         val copy = rrule.copy(description = description)
-        rruleSetsSet.remove(rrule)
-        rruleSetsSet.add(copy)
-        updateRRuleStateFromSet()
+        val rruleSetsMutable = rruleSets.value.toMutableSet()
+        rruleSetsMutable.remove(rrule)
+        rruleSetsMutable.add(copy)
+        preferencesStore.rruleSets = rruleSetsMutable
+        rruleSets.value = rruleSetsMutable
         saveMsgTimer?.cancel()
         saveMsg = "💬Opgeslagen!"
         saveMsgTimer =
@@ -90,11 +84,13 @@ fun RRuleSetRows(
         id: Long,
         ldtString: String,
     ) {
-        val rrule = rruleSetsSet.find { it.id == id } ?: return
+        val rrule = rruleSets.value.find { it.id == id } ?: return
         val copy = rrule.copy(fromLDT = ldtString)
-        rruleSetsSet.remove(rrule)
-        rruleSetsSet.add(copy)
-        updateRRuleStateFromSet()
+        val rruleSetsMutable = rruleSets.value.toMutableSet()
+        rruleSetsMutable.remove(rrule)
+        rruleSetsMutable.add(copy)
+        preferencesStore.rruleSets = rruleSetsMutable
+        rruleSets.value = rruleSetsMutable
 
         try {
             LocalDateTime.parse(ldtString, formatterLDT)
@@ -124,11 +120,13 @@ fun RRuleSetRows(
         rruleString: String,
     ) {
         // Verify
-        val rrule = rruleSetsSet.find { it.id == id } ?: return
+        val rrule = rruleSets.value.find { it.id == id } ?: return
         val copy = rrule.copy(rrule = rruleString)
-        rruleSetsSet.remove(rrule)
-        rruleSetsSet.add(copy)
-        updateRRuleStateFromSet()
+        val rruleSetsMutable = rruleSets.value.toMutableSet()
+        rruleSetsMutable.remove(rrule)
+        rruleSetsMutable.add(copy)
+        preferencesStore.rruleSets = rruleSetsMutable
+        rruleSets.value = rruleSetsMutable
 
         try {
             RecurrenceRule(rruleString)
@@ -155,9 +153,11 @@ fun RRuleSetRows(
     }
 
     fun deleteRRule(id: Long) {
-        val rrule = rruleSetsSet.find { it.id == id } ?: return
-        rruleSetsSet.remove(rrule)
-        updateRRuleStateFromSet()
+        val rrule = rruleSets.value.find { it.id == id } ?: return
+        val rruleSetsMutable = rruleSets.value.toMutableSet()
+        rruleSetsMutable.remove(rrule)
+        preferencesStore.rruleSets = rruleSetsMutable
+        rruleSets.value = rruleSetsMutable
     }
 
     MaterialTheme {
@@ -186,7 +186,7 @@ fun RRuleSetRows(
         Row {
             Column(Modifier.fillMaxHeight().fillMaxWidth()) {
                 // Only show of the current profile
-                rruleSetsSet
+                rruleSets.value
                     .filter { it.profileId == activeProfile.value.toLong() }
                     .sortedBy { it.id }.map { rruleSet ->
                         Row(Modifier.fillMaxWidth()) {

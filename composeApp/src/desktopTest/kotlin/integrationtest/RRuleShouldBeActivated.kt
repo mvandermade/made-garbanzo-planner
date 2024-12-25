@@ -11,8 +11,12 @@ import androidx.compose.ui.test.performTextInput
 import integrationtest.preferences.PreferenceStoreMock
 import org.apache.pdfbox.Loader
 import org.apache.pdfbox.text.PDFTextStripper
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import preferences.PreferencesStoreRaw
+import preferences.migratePreferences
+import repositories.PreferencesStore
 import waitUntilText
 import java.io.File
 import java.util.prefs.Preferences
@@ -22,14 +26,22 @@ class RRuleShouldBeActivated {
     @get:Rule
     val cr = createComposeRule()
 
+    private lateinit var preferencesStore: PreferencesStore
+
+    @Before
+    fun setUp() {
+        val preferences = Preferences.userRoot().node(PreferenceStoreMock::class.java.name)
+        preferences.clear()
+
+        val preferencesStoreRaw = PreferencesStoreRaw(preferences)
+        migratePreferences(preferencesStoreRaw)
+        preferencesStore = PreferencesStore(preferences, preferencesStoreRaw.readV1())
+    }
+
     @Test
     fun `Set RRule and then generate a PDF Expect it to be on it`() {
-        val prefs = Preferences.userRoot().node(PreferenceStoreMock::class.java.name)
-        // For testing this is required
-        prefs.clear()
-
         cr.setContent {
-            App(prefs)
+            App(preferencesStore)
         }
 
         cr.waitUntilText("Ga naar instellingen ⚙️")

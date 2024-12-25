@@ -18,27 +18,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import formatterLD
-import model.Prefs
 import pickNextMonday
+import repositories.PreferencesStore
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.temporal.ChronoField
 import java.util.*
-import java.util.prefs.Preferences
 import kotlin.concurrent.schedule
 
 @Composable
-fun DatePickerRow(prefs: Preferences) {
-    var startDateEnabled by remember { mutableStateOf(prefs.getBoolean(Prefs.START_DATE_ENABLED.key, false)) }
-    var localDateString by remember { mutableStateOf(prefs.get(Prefs.START_DATE.key, "01-01-2000")) }
+fun DatePickerRow(preferencesStore: PreferencesStore) {
+    var startDateEnabled by remember { mutableStateOf(preferencesStore.startDateIsEnabled) }
+    var localDateString by remember { mutableStateOf(preferencesStore.startDate) }
 
     var errorMsg by remember { mutableStateOf("") }
     var errorMsgTimer by remember { mutableStateOf<TimerTask?>(null) }
 
     fun saveLD(value: String) {
         localDateString = value
-        prefs.put(Prefs.START_DATE.key, value)
+        preferencesStore.startDate = value
+        println("SAVING!!§")
         try {
             val localDate = LocalDate.parse(value, formatterLD)
             val fromLocalDateTime = LocalDateTime.of(localDate, LocalTime.MIDNIGHT)
@@ -62,8 +62,8 @@ fun DatePickerRow(prefs: Preferences) {
             Checkbox(
                 checked = startDateEnabled,
                 onCheckedChange = {
+                    preferencesStore.startDateIsEnabled = it
                     startDateEnabled = it
-                    prefs.putBoolean(Prefs.START_DATE_ENABLED.key, it)
                 },
             )
         }

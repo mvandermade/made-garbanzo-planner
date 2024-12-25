@@ -16,19 +16,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import model.AppState
-import model.Prefs
+import repositories.PreferencesStore
 import screen.preferences.AutoLaunchRow
 import screen.preferences.ProfilesColumn
 import screen.preferences.RRuleSetRows
-import java.util.prefs.Preferences
 
 @Composable
 fun preferences(
     requestNewAppState: (appState: AppState) -> Unit,
-    prefs: Preferences,
+    preferencesStore: PreferencesStore,
 ) {
     // To let the user see the change immediately
-    val activeProfile = remember { mutableStateOf(prefs.get(Prefs.ACTIVE_PROFILE.key, "0")) }
+    val activeProfile = remember { mutableStateOf(preferencesStore.activeProfile) }
 
     MaterialTheme {
         Box(
@@ -36,7 +35,7 @@ fun preferences(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
         ) {
-            ProfilesColumn(prefs, activeProfile)
+            ProfilesColumn(preferencesStore, activeProfile)
             Column {
                 Row {
                     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -45,8 +44,8 @@ fun preferences(
                         }
                     }
                 }
-                AutoLaunchRow(prefs)
-                RRuleSetRows(prefs, activeProfile)
+                AutoLaunchRow(preferencesStore)
+                RRuleSetRows(preferencesStore, activeProfile)
             }
         }
     }
