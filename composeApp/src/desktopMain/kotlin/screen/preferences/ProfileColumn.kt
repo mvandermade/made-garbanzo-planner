@@ -30,11 +30,11 @@ fun ProfilesColumn(
         Row(verticalAlignment = Alignment.CenterVertically) {
             profilesSet.map { profile ->
                 RadioButton(selected = activeProfile.value == profile.id, onClick = {
-                    preferencesStore.activeProfile = activeProfile.value
+                    preferencesStore.activeProfile = profile.id
                     activeProfile.value = profile.id
                 })
                 ClickableText(AnnotatedString(profile.name), onClick = {
-                    preferencesStore.activeProfile = activeProfile.value
+                    preferencesStore.activeProfile = profile.id
                     activeProfile.value = profile.id
                 })
             }
