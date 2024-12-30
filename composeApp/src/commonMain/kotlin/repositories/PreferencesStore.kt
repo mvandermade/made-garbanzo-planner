@@ -62,4 +62,11 @@ class PreferencesStore(private val preferences: Preferences, private var prefere
             prefs.autoOpenPDFAfterGenerationIsEnabled = autoOpenPDFAfterGenerationIsEnabled
             persistPrefs()
         }
+
+    var pdfOutputPath: String
+        get() = prefs.pdfOutputPath
+        set(pdfOutputPath) {
+            prefs.pdfOutputPath = pdfOutputPath
+            persistPrefs()
+        }
 }

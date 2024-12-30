@@ -29,7 +29,7 @@ fun start(
     preferencesStore: PreferencesStore,
 ) {
     val activeProfile = remember { mutableStateOf(preferencesStore.activeProfile) }
-    var pdfPath by remember { mutableStateOf("") }
+    var pdfPath by remember { mutableStateOf(preferencesStore.pdfOutputPath) }
 
     MaterialTheme {
         ProfilesColumn(preferencesStore, activeProfile)

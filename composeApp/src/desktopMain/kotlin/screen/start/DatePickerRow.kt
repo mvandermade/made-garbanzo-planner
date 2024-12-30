@@ -72,7 +72,7 @@ fun DatePickerRow(preferencesStore: PreferencesStore) {
         Row {
             Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 TextField(
-                    label = { Text("Vanaf: $FORMAT_LD") },
+                    label = { Text("Vanaf eerste maandag na: $FORMAT_LD") },
                     value = localDateString,
                     onValueChange = {
                         saveLD(it)

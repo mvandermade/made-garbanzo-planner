@@ -14,4 +14,5 @@ class PreferencesV1(
     var startDate: String,
     var startDateIsEnabled: Boolean,
     var autoOpenPDFAfterGenerationIsEnabled: Boolean,
+    var pdfOutputPath: String,
 ) : IPreferences

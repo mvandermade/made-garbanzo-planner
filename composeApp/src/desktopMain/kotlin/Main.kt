@@ -18,10 +18,10 @@ fun main() {
             val preferencesStoreRaw = PreferencesStoreRaw(preferences)
             migratePreferences(preferencesStoreRaw)
             val preferencesStore = PreferencesStore(preferences, preferencesStoreRaw.readV1())
-            App(preferencesStore)
             if (preferencesStore.onStartUpOpenPDF) {
-                writeAndOpenMainDocument(preferencesStore)
+                preferencesStore.pdfOutputPath = writeAndOpenMainDocument(preferencesStore)
             }
+            App(preferencesStore)
         }
     }
 }

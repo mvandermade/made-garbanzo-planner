@@ -50,6 +50,7 @@ private fun initializePreferences(
             startDate = "01-01-2000",
             startDateIsEnabled = false,
             autoOpenPDFAfterGenerationIsEnabled = true,
+            pdfOutputPath = "",
         )
 
     preferencesStoreRaw.dumpAsString(
