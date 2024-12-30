@@ -1,4 +1,4 @@
-package screen
+package screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,11 +15,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import model.AppState
+import models.AppState
 import repositories.PreferencesStore
-import screen.preferences.AutoLaunchRow
-import screen.preferences.ProfilesColumn
-import screen.preferences.RRuleSetRows
+import screens.preferences.AutoLaunchRow
+import screens.preferences.ProfilesColumn
+import screens.preferences.RRuleSetRows
 
 @Composable
 fun preferences(

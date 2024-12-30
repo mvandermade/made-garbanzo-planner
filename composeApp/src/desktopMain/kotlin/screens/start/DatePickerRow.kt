@@ -1,4 +1,4 @@
-package screen.start
+package screens.start
 
 import FORMAT_LD
 import androidx.compose.foundation.layout.Column

@@ -2,8 +2,8 @@ package preferences
 
 import constants.APP_PREFERENCES_JSON
 import kotlinx.serialization.json.Json
-import model.preferences.PreferencesTree
-import model.preferences.PreferencesV1
+import models.preferences.PreferencesTree
+import models.preferences.PreferencesV1
 import java.util.prefs.Preferences
 
 private val INITIAL_JSON =
@@ -12,16 +12,13 @@ private val INITIAL_JSON =
     """.trimIndent()
 
 class PreferencesStoreRaw(private val preferences: Preferences) {
-    val version: Long
-
     private val jsonIgnoreUnknownKeys = Json { ignoreUnknownKeys = true }
     private val json = Json
 
-    init {
-        version =
-            jsonIgnoreUnknownKeys.decodeFromString<PreferencesTree>(
-                preferences.get(APP_PREFERENCES_JSON, INITIAL_JSON),
-            ).version
+    fun readVersion(): Long {
+        return jsonIgnoreUnknownKeys.decodeFromString<PreferencesTree>(
+            preferences.get(APP_PREFERENCES_JSON, INITIAL_JSON),
+        ).version
     }
 
     fun dumpAsString(preferencesTree: String) {
@@ -30,13 +27,16 @@ class PreferencesStoreRaw(private val preferences: Preferences) {
         preferences.put(APP_PREFERENCES_JSON, preferencesTree)
     }
 
-    fun readAsString(): String {
-        // TODO It might be bad to return an empty thing here?
+    fun resetToDefault() {
+        preferences.remove(APP_PREFERENCES_JSON)
+    }
+
+    fun readAsStringIfExists(): String {
         return preferences.get(APP_PREFERENCES_JSON, INITIAL_JSON)
     }
 
     fun readV1(): PreferencesV1 {
-        return jsonIgnoreUnknownKeys.decodeFromString<PreferencesV1>(
+        return json.decodeFromString<PreferencesV1>(
             preferences.get(APP_PREFERENCES_JSON, INITIAL_JSON),
         )
     }

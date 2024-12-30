@@ -1,4 +1,4 @@
-package model
+package models
 
 enum class AppState {
     START,

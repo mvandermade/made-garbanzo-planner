@@ -1,4 +1,4 @@
-package model.preferences
+package models.preferences
 
 import kotlinx.serialization.Serializable
 

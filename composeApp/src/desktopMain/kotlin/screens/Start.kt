@@ -1,4 +1,4 @@
-package screen
+package screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,10 +17,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import model.AppState
+import models.AppState
 import repositories.PreferencesStore
-import screen.preferences.ProfilesColumn
-import screen.start.DatePickerRow
+import screens.preferences.ProfilesColumn
+import screens.start.DatePickerRow
 import writeAndOpenMainDocument
 
 @Composable

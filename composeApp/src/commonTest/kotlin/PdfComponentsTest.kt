@@ -1,6 +1,6 @@
 import io.mockk.mockk
-import model.RRuleSetV1
-import model.preferences.PreferencesV1
+import models.RRuleSetV1
+import models.preferences.PreferencesV1
 import nl.wykorijnsburger.kminrandom.minRandom
 import org.apache.pdfbox.text.PDFTextStripper
 import org.junit.experimental.runners.Enclosed

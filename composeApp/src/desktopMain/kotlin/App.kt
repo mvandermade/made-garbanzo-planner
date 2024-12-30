@@ -1,8 +1,8 @@
 import androidx.compose.runtime.*
-import model.AppState
+import models.AppState
 import repositories.PreferencesStore
-import screen.preferences
-import screen.start
+import screens.preferences
+import screens.start
 
 @Composable
 fun App(preferencesStore: PreferencesStore) {

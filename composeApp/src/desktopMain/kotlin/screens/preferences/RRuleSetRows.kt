@@ -1,4 +1,4 @@
-package screen.preferences
+package screens.preferences
 
 import FORMAT_LDT
 import androidx.compose.foundation.layout.Column
@@ -22,7 +22,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import formatterLDT
-import model.RRuleSetV1
+import models.RRuleSetV1
 import org.dmfs.rfc5545.recur.RecurrenceRule
 import repositories.PreferencesStore
 import java.time.LocalDateTime

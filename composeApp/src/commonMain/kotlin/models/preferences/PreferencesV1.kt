@@ -1,8 +1,8 @@
-package model.preferences
+package models.preferences
 
 import kotlinx.serialization.Serializable
-import model.ProfileV1
-import model.RRuleSetV1
+import models.ProfileV1
+import models.RRuleSetV1
 
 @Serializable
 class PreferencesV1(

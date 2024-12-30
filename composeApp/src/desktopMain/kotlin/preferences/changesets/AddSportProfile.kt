@@ -2,8 +2,8 @@ package preferences.changesets
 
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import model.ProfileV1
-import model.preferences.PreferencesV1
+import models.ProfileV1
+import models.preferences.PreferencesV1
 import preferences.PreferencesStoreRaw
 
 fun addSportProfile(
@@ -12,7 +12,7 @@ fun addSportProfile(
 ) {
     val treeV1 =
         Json.decodeFromString<PreferencesV1>(
-            preferencesStoreRaw.readAsString(),
+            preferencesStoreRaw.readAsStringIfExists(),
         )
     treeV1.profiles += ProfileV1(3, "Sport")
 
@@ -29,7 +29,7 @@ private fun bumpVersion(
 ) {
     val treeV1 =
         Json.decodeFromString<PreferencesV1>(
-            preferencesStoreRaw.readAsString(),
+            preferencesStoreRaw.readAsStringIfExists(),
         )
 
     treeV1.version = version + 1

@@ -3,9 +3,9 @@ package preferences.changesets
 import formatterLDT
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import model.ProfileV1
-import model.RRuleSetV1
-import model.preferences.PreferencesV1
+import models.ProfileV1
+import models.RRuleSetV1
+import models.preferences.PreferencesV1
 import preferences.PreferencesStoreRaw
 import java.time.LocalDateTime
 
@@ -64,7 +64,7 @@ private fun bumpVersion(
 ) {
     val treeV1 =
         Json.decodeFromString<PreferencesV1>(
-            preferencesStoreRaw.readAsString(),
+            preferencesStoreRaw.readAsStringIfExists(),
         )
 
     treeV1.version = version + 1

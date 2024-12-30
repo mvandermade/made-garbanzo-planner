@@ -3,16 +3,16 @@ package repositories
 import constants.APP_PREFERENCES_JSON
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import model.ProfileV1
-import model.RRuleSetV1
-import model.preferences.PreferencesV1
+import models.ProfileV1
+import models.RRuleSetV1
+import models.preferences.PreferencesV1
 import java.util.prefs.Preferences
 
-// TODO add write locks for prefs
-class PreferencesStore(private val preferences: Preferences, private var preferencesV1: PreferencesV1) {
+class PreferencesStore(
+    private val preferences: Preferences,
+    private val prefs: PreferencesV1,
+) {
     private val json = Json
-
-    private var prefs = preferencesV1
 
     private fun persistPrefs() {
         preferences.put(APP_PREFERENCES_JSON, json.encodeToString(prefs))

@@ -1,4 +1,4 @@
-import model.BoxCoordinates
+import models.BoxCoordinates
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import repositories.PreferencesStore

@@ -26,7 +26,7 @@ The suggestion box showing two Recurring rules:
 ![PDF output](docs/images/pdf_two_rrules.png)
 The suggestion box showing an error:
 ![PDF output](docs/images/pdf_error_rrules.png)
-The settings screen, allowing to enter recurrence rules and finetune the application:
+The settings screens, allowing to enter recurrence rules and finetune the application:
 ![PDF output](docs/images/settings.png)
 The recurrence rule section showing an error. The error will be handled in the planner as text too. The error is piped through from the library that is used to parse the recurrence rules
 ![PDF output](docs/images/settings_error.png)
