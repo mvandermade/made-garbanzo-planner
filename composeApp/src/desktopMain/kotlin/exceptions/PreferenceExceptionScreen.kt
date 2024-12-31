@@ -10,11 +10,11 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import preferences.PreferencesStoreRaw
+import preferences.PreferencesStoreInternal
 import kotlin.system.exitProcess
 
 @Composable
-fun PreferenceExceptionScreen(preferencesStoreRaw: PreferencesStoreRaw) {
+fun PreferenceExceptionScreen(preferencesStoreInternal: PreferencesStoreInternal) {
     MaterialTheme {
         Column {
             Row {
@@ -27,7 +27,7 @@ fun PreferenceExceptionScreen(preferencesStoreRaw: PreferencesStoreRaw) {
             Row {
                 Button(
                     onClick = {
-                        preferencesStoreRaw.resetToDefault()
+                        preferencesStoreInternal.resetToDefault()
                         exitProcess(0)
                     },
                 ) {
@@ -37,7 +37,7 @@ fun PreferenceExceptionScreen(preferencesStoreRaw: PreferencesStoreRaw) {
             Row {
                 TextField(
                     modifier = Modifier.fillMaxWidth().fillMaxHeight(),
-                    value = preferencesStoreRaw.readAsStringIfExists(),
+                    value = preferencesStoreInternal.readAsStringIfExists(),
                     onValueChange = {},
                     readOnly = false,
                     enabled = true,

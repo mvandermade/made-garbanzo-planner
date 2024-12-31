@@ -5,17 +5,31 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import models.ProfileV1
 import models.RRuleSetV1
-import models.preferences.PreferencesV1
+import models.preferences.PreferencesV2
+import java.io.File
 import java.util.prefs.Preferences
+
+private val INITIAL_JSON =
+    """
+    { "version": 0 }
+    """.trimIndent()
 
 class PreferencesStore(
     private val preferences: Preferences,
-    private val prefs: PreferencesV1,
+    private val prefs: PreferencesV2,
 ) {
     private val json = Json
 
     private fun persistPrefs() {
-        preferences.put(APP_PREFERENCES_JSON, json.encodeToString(prefs))
+        if (prefs.externalPreferencesIsEnabled) {
+            File(prefs.externalPreferencesPath).writeText(json.encodeToString(prefs))
+        } else {
+            preferences.put(APP_PREFERENCES_JSON, json.encodeToString(prefs))
+        }
+    }
+
+    fun getPreferencesAsJson(): String {
+        return json.encodeToString(prefs)
     }
 
     var rruleSets: Set<RRuleSetV1>
@@ -68,5 +82,27 @@ class PreferencesStore(
         set(pdfOutputPath) {
             prefs.pdfOutputPath = pdfOutputPath
             persistPrefs()
+        }
+
+    var externalPreferencesIsEnabled: Boolean
+        get() = prefs.externalPreferencesIsEnabled
+        set(externalPreferencesIsEnabled) {
+            prefs.externalPreferencesIsEnabled = externalPreferencesIsEnabled
+            // Do not apply writing to file yet
+            val preferencesString = preferences.get(APP_PREFERENCES_JSON, INITIAL_JSON)
+            val prefsInMemory = json.decodeFromString<PreferencesV2>(preferencesString)
+            prefsInMemory.externalPreferencesIsEnabled = externalPreferencesIsEnabled
+            preferences.put(APP_PREFERENCES_JSON, json.encodeToString(prefsInMemory))
+        }
+
+    var externalPreferencesPath: String
+        get() = prefs.externalPreferencesPath
+        set(externalPreferencesPath) {
+            prefs.externalPreferencesPath = externalPreferencesPath
+            // Do not apply writing to file yet
+            val preferencesString = preferences.get(APP_PREFERENCES_JSON, INITIAL_JSON)
+            val prefsInMemory = json.decodeFromString<PreferencesV2>(preferencesString)
+            prefsInMemory.externalPreferencesPath = externalPreferencesPath
+            preferences.put(APP_PREFERENCES_JSON, json.encodeToString(prefsInMemory))
         }
 }

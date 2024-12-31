@@ -2,14 +2,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import exceptions.PreferenceExceptionScreen
-import preferences.PreferencesStoreRaw
+import preferences.PreferencesStoreExternal
+import preferences.PreferencesStoreInternal
 import preferences.migratePreferences
 import repositories.PreferencesStore
 import java.util.prefs.Preferences
 
 fun main() {
-    val preferences = Preferences.userRoot().node(PreferencesStoreRaw::class.java.name)
-    val preferencesStoreRaw = PreferencesStoreRaw(preferences)
+    val preferences = Preferences.userRoot().node(PreferencesStoreInternal::class.java.name)
+    val preferencesStoreInternal = PreferencesStoreInternal(preferences)
 
     application {
         Window(
@@ -18,23 +19,52 @@ fun main() {
             title = "made-garbanzo-planner ${System.getProperty("jpackage.app-version") ?: ""}",
         ) {
             try {
-                migratePreferences(preferencesStoreRaw)
+                migratePreferences(preferencesStoreInternal)
             } catch (e: Exception) {
-                PreferenceExceptionScreen(preferencesStoreRaw)
+                PreferenceExceptionScreen(preferencesStoreInternal)
             }
 
-            val preferencesV1 =
+            val preferencesV2 =
                 try {
-                    preferencesStoreRaw.readV1()
+                    preferencesStoreInternal.readV2()
                 } catch (e: Exception) {
                     e.printStackTrace()
                     null
                 }
 
-            if (preferencesV1 == null) {
-                PreferenceExceptionScreen(preferencesStoreRaw)
+            if (preferencesV2 == null) {
+                PreferenceExceptionScreen(preferencesStoreInternal)
             } else {
-                val preferencesStore = PreferencesStore(preferences, preferencesV1)
+                var preferencesStore = PreferencesStore(preferences, preferencesV2)
+
+                if (preferencesStore.externalPreferencesIsEnabled) {
+                    val externalPreferencesPath = preferencesStore.externalPreferencesPath
+                    val preferencesStoreExternal =
+                        PreferencesStoreExternal(preferences, preferencesStore.externalPreferencesPath)
+                    try {
+                        migratePreferences(preferencesStoreExternal)
+                    } catch (e: Exception) {
+                        preferencesStore.externalPreferencesIsEnabled = false
+                        throw e
+                    }
+
+                    val preferencesV2external =
+                        try {
+                            preferencesStoreExternal.readV2()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            null
+                        }
+
+                    if (preferencesV2external == null) {
+                        PreferenceExceptionScreen(preferencesStoreInternal)
+                    } else {
+                        preferencesStore = PreferencesStore(preferences, preferencesV2external)
+                        // Set the proper paths that might be missing due to a lower version or new file...
+                        preferencesStore.externalPreferencesIsEnabled = true
+                        preferencesStore.externalPreferencesPath = externalPreferencesPath
+                    }
+                }
 
                 if (preferencesStore.onStartUpOpenPDF) {
                     preferencesStore.pdfOutputPath = writeAndOpenMainDocument(preferencesStore)

@@ -11,15 +11,15 @@ import java.time.LocalDateTime
 
 fun initialData(
     version: Long,
-    preferencesStoreRaw: PreferencesStoreRaw,
+    preferencesStoreInternal: PreferencesStoreRaw,
 ) {
-    initializePreferences(version, preferencesStoreRaw)
-    bumpVersion(version, preferencesStoreRaw)
+    initializePreferences(version, preferencesStoreInternal)
+    bumpVersion(version, preferencesStoreInternal)
 }
 
 private fun initializePreferences(
     version: Long,
-    preferencesStoreRaw: PreferencesStoreRaw,
+    preferencesStoreInternal: PreferencesStoreRaw,
 ) {
     val treeV1 =
         PreferencesV1(
@@ -53,23 +53,23 @@ private fun initializePreferences(
             pdfOutputPath = "",
         )
 
-    preferencesStoreRaw.dumpAsString(
+    preferencesStoreInternal.dumpAsString(
         Json.encodeToString(treeV1),
     )
 }
 
 private fun bumpVersion(
     version: Long,
-    preferencesStoreRaw: PreferencesStoreRaw,
+    preferencesStore: PreferencesStoreRaw,
 ) {
     val treeV1 =
         Json.decodeFromString<PreferencesV1>(
-            preferencesStoreRaw.readAsStringIfExists(),
+            preferencesStore.readAsStringIfExists(),
         )
 
     treeV1.version = version + 1
 
-    preferencesStoreRaw.dumpAsString(
+    preferencesStore.dumpAsString(
         Json.encodeToString(treeV1),
     )
 }

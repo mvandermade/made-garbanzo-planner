@@ -36,7 +36,7 @@ fun RRuleSetRows(
 ) {
     var rruleErrorMsgTimer by remember { mutableStateOf<TimerTask?>(null) }
     var saveMsgTimer by remember { mutableStateOf<TimerTask?>(null) }
-    var rruleList =
+    val rruleList =
         mutableStateListOf<RRuleSetV1>().apply {
             addAll(preferencesStore.rruleSets)
         }

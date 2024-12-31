@@ -22,7 +22,7 @@ fun AutoLaunchRow(preferencesStore: PreferencesStore) {
     var autoOpen by remember { mutableStateOf(preferencesStore.autoOpenPDFAfterGenerationIsEnabled) }
 
     Row {
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("PDF Generator automatisch starten?")
                 Checkbox(

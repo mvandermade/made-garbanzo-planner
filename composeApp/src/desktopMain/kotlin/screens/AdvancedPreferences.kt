@@ -16,6 +16,8 @@ import androidx.compose.ui.Modifier
 import models.AppState
 import repositories.PreferencesStore
 import screens.advancedPreferences.AutoLaunchRow
+import screens.advancedPreferences.DumpSettingsRow
+import screens.advancedPreferences.ExternalPreferencesRow
 
 @Composable
 fun advancedPreferences(
@@ -37,6 +39,8 @@ fun advancedPreferences(
                     }
                 }
                 AutoLaunchRow(preferencesStore)
+                DumpSettingsRow(preferencesStore)
+                ExternalPreferencesRow(preferencesStore)
             }
         }
     }

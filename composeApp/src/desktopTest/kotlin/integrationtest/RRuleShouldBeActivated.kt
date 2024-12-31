@@ -14,7 +14,7 @@ import org.apache.pdfbox.text.PDFTextStripper
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import preferences.PreferencesStoreRaw
+import preferences.PreferencesStoreInternal
 import preferences.migratePreferences
 import repositories.PreferencesStore
 import waitUntilText
@@ -33,9 +33,9 @@ class RRuleShouldBeActivated {
         val preferences = Preferences.userRoot().node(PreferenceStoreMock::class.java.name)
         preferences.clear()
 
-        val preferencesStoreRaw = PreferencesStoreRaw(preferences)
-        migratePreferences(preferencesStoreRaw)
-        preferencesStore = PreferencesStore(preferences, preferencesStoreRaw.readV1())
+        val preferencesStoreInternal = PreferencesStoreInternal(preferences)
+        migratePreferences(preferencesStoreInternal)
+        preferencesStore = PreferencesStore(preferences, preferencesStoreInternal.readV1())
     }
 
     @Test
