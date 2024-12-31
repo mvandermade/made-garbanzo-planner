@@ -175,7 +175,10 @@ fun RRuleSetRows(
         }
         Row {
             Column {
-                Text("There are some recurrence rule (RRule) generators like: https://jkbrzt.github.io/rrule")
+                Text(
+                    "Een recurrence rule (RRULE) beschrijft iets wat zich herhaalt in de tijd." +
+                        " Voorbeelden zijn te vinden op: https://jkbrzt.github.io/rrule",
+                )
             }
         }
         Row {

@@ -50,7 +50,10 @@ class RRuleShouldBeActivated {
         cr.waitUntilText("Ga terug naar start")
 
         // Disable auto popup of the PDF
+        cr.onNodeWithText("Geavanceerde instellingen").performClick()
+        cr.waitUntilText("Ga terug naar instellingen")
         cr.onNodeWithContentDescription("auto-open-pdf").performClick()
+        cr.onNodeWithText("Ga terug naar instellingen").performClick()
 
         cr.onNodeWithText("+ Recurrence rule").performClick()
 
