@@ -1,6 +1,6 @@
 import io.mockk.mockk
 import models.RRuleSetV1
-import models.preferences.PreferencesV1
+import models.preferences.PreferencesV2
 import nl.wykorijnsburger.kminrandom.minRandom
 import org.apache.pdfbox.text.PDFTextStripper
 import org.junit.experimental.runners.Enclosed
@@ -25,8 +25,8 @@ class PdfComponentsTest {
         @Test
         fun `Daily rrule should be picked up`() {
             val rruleDescription = "PrintMe"
-            val preferencesV1 =
-                minRandom<PreferencesV1>().apply {
+            val preferencesV2 =
+                minRandom<PreferencesV2>().apply {
                     activeProfile = 1
                     rruleSets =
                         setOf(
@@ -36,7 +36,7 @@ class PdfComponentsTest {
                             ),
                         )
                 }
-            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
+            val preferenceStore = PreferencesStore(mockk(), preferencesV2)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 
@@ -50,8 +50,8 @@ class PdfComponentsTest {
         @Test
         fun `Daily rrule should be picked up and box should match`() {
             val rruleDescription = "PrintMe"
-            val preferencesV1 =
-                minRandom<PreferencesV1>().apply {
+            val preferencesV2 =
+                minRandom<PreferencesV2>().apply {
                     activeProfile = 1
                     rruleSets =
                         setOf(
@@ -61,7 +61,7 @@ class PdfComponentsTest {
                             ),
                         )
                 }
-            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
+            val preferenceStore = PreferencesStore(mockk(), preferencesV2)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 
@@ -83,8 +83,8 @@ class PdfComponentsTest {
             val endLocalDateTimeTooLarge: LocalDateTime = startLocalDateTimeTooLarge.plusWeeks(1).minusNanos(1)
 
             val rruleDescription = "PrintMe"
-            val preferencesV1 =
-                minRandom<PreferencesV1>().apply {
+            val preferencesV2 =
+                minRandom<PreferencesV2>().apply {
                     activeProfile = 1
                     rruleSets =
                         setOf(
@@ -94,7 +94,7 @@ class PdfComponentsTest {
                             ),
                         )
                 }
-            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
+            val preferenceStore = PreferencesStore(mockk(), preferencesV2)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 
@@ -119,8 +119,8 @@ class PdfComponentsTest {
 
         @Test
         fun `Three daily rrule should be picked up`() {
-            val preferencesV1 =
-                minRandom<PreferencesV1>().apply {
+            val preferencesV2 =
+                minRandom<PreferencesV2>().apply {
                     activeProfile = 1
                     rruleSets =
                         setOf(
@@ -138,7 +138,7 @@ class PdfComponentsTest {
                             ),
                         )
                 }
-            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
+            val preferenceStore = PreferencesStore(mockk(), preferencesV2)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 
@@ -160,8 +160,8 @@ class PdfComponentsTest {
                     0,
                     0,
                 ).plusWeeks(1).format(formatterLDT)
-            val preferencesV1 =
-                minRandom<PreferencesV1>().apply {
+            val preferencesV2 =
+                minRandom<PreferencesV2>().apply {
                     activeProfile = 1
                     rruleSets =
                         setOf(
@@ -171,7 +171,7 @@ class PdfComponentsTest {
                             ),
                         )
                 }
-            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
+            val preferenceStore = PreferencesStore(mockk(), preferencesV2)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 
@@ -184,8 +184,8 @@ class PdfComponentsTest {
 
         @Test
         fun `Ignore faulty RRULE`() {
-            val preferencesV1 =
-                minRandom<PreferencesV1>().apply {
+            val preferencesV2 =
+                minRandom<PreferencesV2>().apply {
                     activeProfile = 1
                     rruleSets =
                         setOf(
@@ -199,7 +199,7 @@ class PdfComponentsTest {
                             ),
                         )
                 }
-            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
+            val preferenceStore = PreferencesStore(mockk(), preferencesV2)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 
@@ -212,8 +212,8 @@ class PdfComponentsTest {
 
         @Test
         fun `Ignore RRULE of other profile`() {
-            val preferencesV1 =
-                minRandom<PreferencesV1>().apply {
+            val preferencesV2 =
+                minRandom<PreferencesV2>().apply {
                     activeProfile = 1
                     rruleSets =
                         setOf(
@@ -227,7 +227,7 @@ class PdfComponentsTest {
                             ),
                         )
                 }
-            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
+            val preferenceStore = PreferencesStore(mockk(), preferencesV2)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 
@@ -242,8 +242,8 @@ class PdfComponentsTest {
         fun `Interval rule is processed correctly expect it at the beginning of period`() {
             val entryLocalDateTimeString = LocalDateTime.of(2024, 6, 15, 1, 0, 0).format(formatterLDT)
 
-            val preferencesV1 =
-                minRandom<PreferencesV1>().apply {
+            val preferencesV2 =
+                minRandom<PreferencesV2>().apply {
                     activeProfile = 1
                     rruleSets =
                         setOf(
@@ -253,7 +253,7 @@ class PdfComponentsTest {
                             ),
                         )
                 }
-            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
+            val preferenceStore = PreferencesStore(mockk(), preferencesV2)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 
@@ -271,8 +271,8 @@ class PdfComponentsTest {
         fun `Interval rule is processed correctly expect it at the second pass of period`() {
             val entryLocalDateTimeString = LocalDateTime.of(2024, 6, 15, 1, 0, 0).format(formatterLDT)
 
-            val preferencesV1 =
-                minRandom<PreferencesV1>().apply {
+            val preferencesV2 =
+                minRandom<PreferencesV2>().apply {
                     activeProfile = 1
                     rruleSets =
                         setOf(
@@ -282,7 +282,7 @@ class PdfComponentsTest {
                             ),
                         )
                 }
-            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
+            val preferenceStore = PreferencesStore(mockk(), preferencesV2)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 
@@ -300,8 +300,8 @@ class PdfComponentsTest {
         fun `Draw only should yield the correct box`() {
             val entryLocalDateTimeString = LocalDateTime.of(2024, 6, 15, 1, 0, 0).format(formatterLDT)
 
-            val preferencesV1 =
-                minRandom<PreferencesV1>().apply {
+            val preferencesV2 =
+                minRandom<PreferencesV2>().apply {
                     activeProfile = 1
                     rruleSets =
                         setOf(
@@ -311,7 +311,7 @@ class PdfComponentsTest {
                             ),
                         )
                 }
-            val preferenceStore = PreferencesStore(mockk(), preferencesV1)
+            val preferenceStore = PreferencesStore(mockk(), preferencesV2)
             val page = getRotatedA4Page()
             val doc = getDocumentOf(page)
 

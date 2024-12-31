@@ -35,7 +35,7 @@ class RRuleShouldBeActivated {
 
         val preferencesStoreInternal = PreferencesStoreInternal(preferences)
         migratePreferences(preferencesStoreInternal)
-        preferencesStore = PreferencesStore(preferences, preferencesStoreInternal.readV1())
+        preferencesStore = PreferencesStore(preferences, preferencesStoreInternal.readV2())
     }
 
     @Test
