@@ -1,5 +1,6 @@
 # made-garbanzo-planner
 Plan ahead, one entity at a time!
+![Logo](composeApp/icon/icon.png)
 
 ## Motivation
 In order to be able to schedule with multiple people, an easy to fill in PDF is what I needed.
