@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinSerialization)
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
     id("com.github.ben-manes.versions") version "0.51.0"
 }
 
@@ -31,19 +31,19 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-            implementation("io.mockk:mockk:1.13.13")
+            implementation("io.mockk:mockk:1.13.14")
             implementation("nl.wykorijnsburger.kminrandom:kminrandom:1.0.4")
 
-            implementation("org.junit.jupiter:junit-jupiter-api:5.11.3")
-            implementation("org.junit.jupiter:junit-jupiter-params:5.11.3")
-            implementation("org.junit.jupiter:junit-jupiter-engine:5.11.3")
+            implementation("org.junit.jupiter:junit-jupiter-api:5.11.4")
+            implementation("org.junit.jupiter:junit-jupiter-params:5.11.4")
+            implementation("org.junit.jupiter:junit-jupiter-engine:5.11.4")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
         }
         desktopTest.dependencies {
-            implementation("org.jetbrains.compose.ui:ui-test-junit4:1.6.11")
+            implementation("org.jetbrains.compose.ui:ui-test-junit4:1.7.3")
         }
     }
 }
