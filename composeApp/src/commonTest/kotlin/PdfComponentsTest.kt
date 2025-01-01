@@ -370,7 +370,7 @@ class PdfComponentsTest {
             val box = writeTimeColumn(doc, page, 0f, 0f, 3, 3, 3)
 
             val pdfTextStripper = PDFTextStripper()
-            val text = pdfTextStripper.getText(doc)
+            val text = pdfTextStripper.getText(doc).replace("\r\n", "\n")
             assertEquals("03:03\n03:33\n04:03\n04:33", text.trimEnd())
             // Check the box
             assertEquals(0f, floor(box.topLeftX))
@@ -401,7 +401,7 @@ class PdfComponentsTest {
             val box = writeNoteColumn(doc, page, 0f, 0f, 3, DayOfWeek.MONDAY)
 
             val pdfTextStripper = PDFTextStripper()
-            val text = pdfTextStripper.getText(doc)
+            val text = pdfTextStripper.getText(doc).replace("\r\n", "\n")
             assertEquals(
                 "maandag\n.........................................\n" +
                     ".........................................\n" +
