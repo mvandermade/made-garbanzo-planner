@@ -1,7 +1,7 @@
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import exceptions.PreferenceExceptionScreen
+import models.preferences.PreferencesV2
 import preferences.PreferencesStoreExternal
 import preferences.PreferencesStoreInternal
 import preferences.migratePreferences
@@ -14,62 +14,78 @@ fun main() {
 
     application {
         Window(
-            icon = painterResource("icon.png"),
             onCloseRequest = ::exitApplication,
             title = "made-garbanzo-planner ${System.getProperty("jpackage.app-version") ?: ""}",
         ) {
-            try {
-                migratePreferences(preferencesStoreInternal)
-            } catch (e: Exception) {
-                PreferenceExceptionScreen(preferencesStoreInternal)
-            }
-
-            val preferencesV2 =
+            val migrationSuccess =
                 try {
-                    preferencesStoreInternal.readV2()
+                    migratePreferences(preferencesStoreInternal)
+                    true
                 } catch (e: Exception) {
+                    println("Migration failed: ${e.message}")
                     e.printStackTrace()
-                    null
+                    false
                 }
 
-            if (preferencesV2 == null) {
-                PreferenceExceptionScreen(preferencesStoreInternal)
-            } else {
-                var preferencesStore = PreferencesStore(preferences, preferencesV2)
-
-                if (preferencesStore.externalPreferencesIsEnabled) {
-                    val externalPreferencesPath = preferencesStore.externalPreferencesPath
-                    val preferencesStoreExternal =
-                        PreferencesStoreExternal(preferences, preferencesStore.externalPreferencesPath)
+            if (migrationSuccess) {
+                val preferencesV2internal =
                     try {
-                        migratePreferences(preferencesStoreExternal)
+                        preferencesStoreInternal.readV2()
                     } catch (e: Exception) {
-                        preferencesStore.externalPreferencesIsEnabled = false
-                        throw e
+                        e.printStackTrace()
+                        null
                     }
 
-                    val preferencesV2external =
+                var preferencesV2external: PreferencesV2? = null
+                var preferencesStoreExternal: PreferencesStoreExternal? = null
+
+                if (preferencesV2internal != null) {
+                    var preferencesStore = PreferencesStore(preferences, preferencesV2internal)
+
+                    if (preferencesStore.externalPreferencesIsEnabled) {
+                        val externalPreferencesPath = preferencesStore.externalPreferencesPath
+                        preferencesStoreExternal =
+                            PreferencesStoreExternal(preferences, preferencesStore.externalPreferencesPath)
                         try {
-                            preferencesStoreExternal.readV2()
+                            migratePreferences(preferencesStoreExternal)
                         } catch (e: Exception) {
-                            e.printStackTrace()
-                            null
+                            preferencesStore.externalPreferencesIsEnabled = false
+                            throw e
                         }
 
-                    if (preferencesV2external == null) {
-                        PreferenceExceptionScreen(preferencesStoreInternal)
-                    } else {
-                        preferencesStore = PreferencesStore(preferences, preferencesV2external)
-                        // Set the proper paths that might be missing due to a lower version or new file...
-                        preferencesStore.externalPreferencesIsEnabled = true
-                        preferencesStore.externalPreferencesPath = externalPreferencesPath
-                    }
-                }
+                        preferencesV2external =
+                            try {
+                                preferencesStoreExternal.readV2()
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                null
+                            }
 
-                if (preferencesStore.onStartUpOpenPDF) {
-                    preferencesStore.pdfOutputPath = writeAndOpenMainDocument(preferencesStore)
+                        if (preferencesV2external == null) {
+                            PreferenceExceptionScreen(preferencesStoreExternal)
+                        } else {
+                            preferencesStore = PreferencesStore(preferences, preferencesV2external)
+                            // Set the proper paths that might be missing due to a lower version or new file...
+                            preferencesStore.externalPreferencesIsEnabled = true
+                            preferencesStore.externalPreferencesPath = externalPreferencesPath
+                        }
+                    }
+
+                    if (preferencesStore.onStartUpOpenPDF) {
+                        preferencesStore.pdfOutputPath = writeAndOpenMainDocument(preferencesStore)
+                    }
+
+                    // Error handling
+                    if (preferencesV2external == null && preferencesStoreExternal != null) {
+                        PreferenceExceptionScreen(preferencesStoreExternal)
+                    } else {
+                        App(preferencesStore)
+                    }
+                } else {
+                    PreferenceExceptionScreen(preferencesStoreInternal)
                 }
-                App(preferencesStore)
+            } else {
+                PreferenceExceptionScreen(preferencesStoreInternal)
             }
         }
     }

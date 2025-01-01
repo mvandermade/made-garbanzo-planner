@@ -10,11 +10,11 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import preferences.PreferencesStoreInternal
+import preferences.PreferencesStoreRaw
 import kotlin.system.exitProcess
 
 @Composable
-fun PreferenceExceptionScreen(preferencesStoreInternal: PreferencesStoreInternal) {
+fun PreferenceExceptionScreen(preferencesStoreInternal: PreferencesStoreRaw) {
     MaterialTheme {
         Column {
             Row {
