@@ -7,7 +7,6 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.temporal.TemporalAdjusters
 
 fun writeAndOpenMainDocument(preferencesStore: PreferencesStore): String {
     val page = getRotatedA4Page()
@@ -41,7 +40,7 @@ fun writeMainDocument(
 
     val endLocalDateTime = fromNextMonday.plusWeeks(1).minusNanos(1)
 
-    val bcHeader = writeHeader(doc, page, fromNextMonday, true)
+    val bcHeader = writeHeader(doc, page, fromLocalDateTime, true)
 
     // Setting up table
     val fromHour = 7
@@ -56,12 +55,6 @@ fun writeMainDocument(
     val bcPage = writePage(doc, page, topLeftX, bcHeader.bottomRightY - 20, numberOfRows, fromHour, fromMinute, true)
 
     writeSuggestions(doc, page, topLeftX, bcPage.bottomRightY, fromNextMonday, endLocalDateTime, preferencesStore, true)
-}
-
-fun pickNextMonday(localDateTime: LocalDateTime): LocalDateTime {
-    return localDateTime.with(
-        TemporalAdjusters.next(DayOfWeek.MONDAY),
-    ).withHour(0).withMinute(0).withSecond(0).withNano(0)
 }
 
 fun getFromLDT(

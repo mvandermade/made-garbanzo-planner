@@ -18,12 +18,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import formatterLD
-import pickNextMonday
+import getWeekNumberOfNextMonday
 import repositories.PreferencesStore
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.temporal.ChronoField
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -38,13 +37,10 @@ fun DatePickerRow(preferencesStore: PreferencesStore) {
     fun saveLD(value: String) {
         localDateString = value
         preferencesStore.startDate = value
-        println("SAVING!!§")
         try {
             val localDate = LocalDate.parse(value, formatterLD)
             val fromLocalDateTime = LocalDateTime.of(localDate, LocalTime.MIDNIGHT)
-            val fromNextMonday = pickNextMonday(fromLocalDateTime)
-            val weekNumber = fromNextMonday.get(ChronoField.ALIGNED_WEEK_OF_YEAR)
-            errorMsg = "✅ week: $weekNumber"
+            errorMsg = "✅ week: ${getWeekNumberOfNextMonday(fromLocalDateTime)}"
             errorMsgTimer =
                 Timer("Reset error message").schedule(3000, 5000L) {
                     errorMsg = ""

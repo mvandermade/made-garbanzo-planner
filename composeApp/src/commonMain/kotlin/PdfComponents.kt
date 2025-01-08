@@ -7,7 +7,6 @@ import repositories.PreferencesStore
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoField
 import kotlin.math.floor
 
 fun writeSuggestions(
@@ -68,9 +67,7 @@ fun writeHeader(
     fromDateTime: LocalDateTime,
     draw: Boolean = true,
 ): BoxCoordinates {
-    val weekNumber = fromDateTime.get(ChronoField.ALIGNED_WEEK_OF_YEAR)
-
-    val headerMessage = "Weekplanner $weekNumber"
+    val headerMessage = "Weekplanner ${getWeekNumberOfNextMonday(fromDateTime)}"
     val marginTop = 40f
     val font = PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD)
     val fontSize = 14f
