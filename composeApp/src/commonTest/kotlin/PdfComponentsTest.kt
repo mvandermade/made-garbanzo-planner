@@ -338,7 +338,7 @@ class PdfComponentsTest {
 
             val pdfTextStripper = PDFTextStripper()
             val text = pdfTextStripper.getText(doc)
-            assertEquals("Weekplanner 37", text.trimEnd())
+            assertEquals("Weekplanner 38", text.trimEnd())
             // Check the box
             assertEquals(367f, floor(box.topLeftX))
             assertEquals(565f, floor(box.topLeftY))
