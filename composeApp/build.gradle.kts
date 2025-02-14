@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinSerialization)
     id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
-    id("com.github.ben-manes.versions") version "0.51.0"
+    id("com.github.ben-manes.versions") version "0.52.0"
 }
 
 kotlin {
@@ -25,13 +25,13 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation("org.apache.pdfbox:pdfbox:3.0.3")
+            implementation("org.apache.pdfbox:pdfbox:3.0.4")
             implementation("org.dmfs:lib-recur:0.17.1")
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-            implementation("io.mockk:mockk:1.13.14")
+            implementation("io.mockk:mockk:1.13.16")
             implementation("nl.wykorijnsburger.kminrandom:kminrandom:1.0.4")
 
             implementation("org.junit.jupiter:junit-jupiter-api:5.11.4")
