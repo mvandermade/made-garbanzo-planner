@@ -2,6 +2,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import exceptions.PreferenceExceptionScreen
 import models.preferences.PreferencesV2
+import pdf.writeAndOpenMainDocument
 import preferences.PreferencesStoreExternal
 import preferences.PreferencesStoreInternal
 import preferences.migratePreferences

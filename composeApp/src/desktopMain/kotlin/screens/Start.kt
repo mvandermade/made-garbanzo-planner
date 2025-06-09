@@ -21,7 +21,7 @@ import models.AppState
 import repositories.PreferencesStore
 import screens.preferences.ProfilesColumn
 import screens.start.DatePickerRow
-import writeAndOpenMainDocument
+import pdf.writeAndOpenMainDocument
 
 @Composable
 fun start(

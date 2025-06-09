@@ -1,12 +1,18 @@
+package pdf
+
+import TimeProvider
+import formatterLD
 import models.BoxCoordinates
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
+import pickNextMonday
 import repositories.PreferencesStore
 import java.awt.Desktop
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import kotlin.io.path.createTempFile
 
 fun writeAndOpenMainDocument(preferencesStore: PreferencesStore): String {
     val page = getRotatedA4Page()
@@ -14,7 +20,7 @@ fun writeAndOpenMainDocument(preferencesStore: PreferencesStore): String {
 
     writeMainDocument(preferencesStore, doc, page)
 
-    val tempFile = kotlin.io.path.createTempFile("planner-101-", suffix = ".pdf").toFile()
+    val tempFile = createTempFile("planner-101-", suffix = ".pdf").toFile()
     tempFile.deleteOnExit()
 
     doc.save(tempFile)

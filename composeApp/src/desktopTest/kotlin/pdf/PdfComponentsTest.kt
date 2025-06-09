@@ -1,3 +1,6 @@
+package pdf
+
+import formatterLDT
 import io.mockk.mockk
 import models.RRuleSetV1
 import models.preferences.PreferencesV2
@@ -404,9 +407,9 @@ class PdfComponentsTest {
             val text = pdfTextStripper.getText(doc).replace("\r\n", "\n")
             assertEquals(
                 "maandag\n.........................................\n" +
-                    ".........................................\n" +
-                    ".........................................\n" +
-                    ".........................................",
+                        ".........................................\n" +
+                        ".........................................\n" +
+                        ".........................................",
                 text.trimEnd(),
             )
 
