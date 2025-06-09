@@ -18,10 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import models.AppState
+import pdf.writeAndOpenMainDocument
 import repositories.PreferencesStore
 import screens.preferences.ProfilesColumn
 import screens.start.DatePickerRow
-import pdf.writeAndOpenMainDocument
 
 @Composable
 fun start(
