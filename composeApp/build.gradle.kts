@@ -42,9 +42,9 @@ kotlin {
             implementation("io.mockk:mockk:1.14.2")
             implementation("nl.wykorijnsburger.kminrandom:kminrandom:1.0.4")
 
-            implementation("org.junit.jupiter:junit-jupiter-api:5.13.1")
-            implementation("org.junit.jupiter:junit-jupiter-params:5.13.1")
-            implementation("org.junit.jupiter:junit-jupiter-engine:5.13.1")
+            implementation(libs.junit.jupiter.api)
+            implementation(libs.junit.jupiter.engine)
+            implementation(libs.junit.jupiter.params)
         }
     }
 }
