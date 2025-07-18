@@ -73,11 +73,13 @@ fun start(
                 DatePickerRow(preferencesStore)
             }
             Row {
-                Button(onClick = { requestNewAppState(AppState.LICENSE) },
+                Button(
+                    onClick = { requestNewAppState(AppState.LICENSE) },
                     colors =
                         ButtonDefaults.buttonColors(
                             backgroundColor = MaterialTheme.colors.background,
-                        ),) {
+                        ),
+                ) {
                     Text("Licentie")
                 }
             }
