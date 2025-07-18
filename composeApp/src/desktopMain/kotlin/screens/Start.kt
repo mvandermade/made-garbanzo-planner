@@ -68,7 +68,14 @@ fun start(
                 }
             }
             Divider()
-            DatePickerRow(preferencesStore)
+            Row {
+                DatePickerRow(preferencesStore)
+            }
+            Row {
+                Button(onClick = { requestNewAppState(AppState.LICENSE) }) {
+                    Text("Licentie️")
+                }
+            }
         }
     }
 }
