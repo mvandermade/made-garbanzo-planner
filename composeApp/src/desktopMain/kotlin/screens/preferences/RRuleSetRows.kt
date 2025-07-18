@@ -186,7 +186,8 @@ fun RRuleSetRows(
                 // Only show of the current profile
                 rruleList
                     .filter { it.profileId == activeProfile.value }
-                    .sortedBy { it.id }.map { rruleSet ->
+                    .sortedBy { it.id }
+                    .map { rruleSet ->
                         Row(Modifier.fillMaxWidth()) {
                             Column(Modifier.width(200.dp)) {
                                 TextField(

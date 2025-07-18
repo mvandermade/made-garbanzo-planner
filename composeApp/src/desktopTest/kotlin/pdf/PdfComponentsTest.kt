@@ -34,8 +34,11 @@ class PdfComponentsTest {
                     rruleSets =
                         setOf(
                             RRuleSetV1(
-                                profileId = 1, id = 2, description = rruleDescription,
-                                rrule = "FREQ=DAILY", fromLDT = entryLocalDateTimeString,
+                                profileId = 1,
+                                id = 2,
+                                description = rruleDescription,
+                                rrule = "FREQ=DAILY",
+                                fromLDT = entryLocalDateTimeString,
                             ),
                         )
                 }
@@ -59,8 +62,11 @@ class PdfComponentsTest {
                     rruleSets =
                         setOf(
                             RRuleSetV1(
-                                profileId = 1, id = 2, description = rruleDescription,
-                                rrule = "FREQ=DAILY", fromLDT = entryLocalDateTimeString,
+                                profileId = 1,
+                                id = 2,
+                                description = rruleDescription,
+                                rrule = "FREQ=DAILY",
+                                fromLDT = entryLocalDateTimeString,
                             ),
                         )
                 }
@@ -92,8 +98,11 @@ class PdfComponentsTest {
                     rruleSets =
                         setOf(
                             RRuleSetV1(
-                                profileId = 1, id = 2, description = rruleDescription,
-                                rrule = "FREQ=DAILY", fromLDT = entryLocalDateTimeString,
+                                profileId = 1,
+                                id = 2,
+                                description = rruleDescription,
+                                rrule = "FREQ=DAILY",
+                                fromLDT = entryLocalDateTimeString,
                             ),
                         )
                 }
@@ -128,16 +137,25 @@ class PdfComponentsTest {
                     rruleSets =
                         setOf(
                             RRuleSetV1(
-                                profileId = 1, id = 2, description = "PrintMe",
-                                rrule = "FREQ=DAILY", fromLDT = entryLocalDateTimeString,
+                                profileId = 1,
+                                id = 2,
+                                description = "PrintMe",
+                                rrule = "FREQ=DAILY",
+                                fromLDT = entryLocalDateTimeString,
                             ),
                             RRuleSetV1(
-                                profileId = 1, id = 44, description = "PrintMe2",
-                                rrule = "FREQ=DAILY", fromLDT = entryLocalDateTimeString,
+                                profileId = 1,
+                                id = 44,
+                                description = "PrintMe2",
+                                rrule = "FREQ=DAILY",
+                                fromLDT = entryLocalDateTimeString,
                             ),
                             RRuleSetV1(
-                                profileId = 1, id = 60, description = "PrintMe3",
-                                rrule = "FREQ=DAILY", fromLDT = entryLocalDateTimeString,
+                                profileId = 1,
+                                id = 60,
+                                description = "PrintMe3",
+                                rrule = "FREQ=DAILY",
+                                fromLDT = entryLocalDateTimeString,
                             ),
                         )
                 }
@@ -155,22 +173,27 @@ class PdfComponentsTest {
         @Test
         fun `No hit in current timeframe`() {
             val entryLocalDateTimeString: String =
-                LocalDateTime.of(
-                    2021,
-                    1,
-                    6,
-                    1,
-                    0,
-                    0,
-                ).plusWeeks(1).format(formatterLDT)
+                LocalDateTime
+                    .of(
+                        2021,
+                        1,
+                        6,
+                        1,
+                        0,
+                        0,
+                    ).plusWeeks(1)
+                    .format(formatterLDT)
             val preferencesV2 =
                 minRandom<PreferencesV2>().apply {
                     activeProfile = 1
                     rruleSets =
                         setOf(
                             RRuleSetV1(
-                                profileId = 1, id = 2, description = "PrintMe",
-                                rrule = "FREQ=MONTHLY", fromLDT = entryLocalDateTimeString,
+                                profileId = 1,
+                                id = 2,
+                                description = "PrintMe",
+                                rrule = "FREQ=MONTHLY",
+                                fromLDT = entryLocalDateTimeString,
                             ),
                         )
                 }
@@ -193,12 +216,18 @@ class PdfComponentsTest {
                     rruleSets =
                         setOf(
                             RRuleSetV1(
-                                profileId = 1, id = 2, description = "PrintMe",
-                                rrule = "FREQ=DAILY", fromLDT = entryLocalDateTimeString,
+                                profileId = 1,
+                                id = 2,
+                                description = "PrintMe",
+                                rrule = "FREQ=DAILY",
+                                fromLDT = entryLocalDateTimeString,
                             ),
                             RRuleSetV1(
-                                profileId = 1, id = 3, description = "NO_PRINT",
-                                rrule = "OOPS", fromLDT = entryLocalDateTimeString,
+                                profileId = 1,
+                                id = 3,
+                                description = "NO_PRINT",
+                                rrule = "OOPS",
+                                fromLDT = entryLocalDateTimeString,
                             ),
                         )
                 }
@@ -221,12 +250,18 @@ class PdfComponentsTest {
                     rruleSets =
                         setOf(
                             RRuleSetV1(
-                                profileId = 1, id = 2, description = "PrintMe",
-                                rrule = "FREQ=DAILY", fromLDT = entryLocalDateTimeString,
+                                profileId = 1,
+                                id = 2,
+                                description = "PrintMe",
+                                rrule = "FREQ=DAILY",
+                                fromLDT = entryLocalDateTimeString,
                             ),
                             RRuleSetV1(
-                                profileId = 2, id = 3, description = "NO_PRINT",
-                                rrule = "FREQ=DAILY", fromLDT = entryLocalDateTimeString,
+                                profileId = 2,
+                                id = 3,
+                                description = "NO_PRINT",
+                                rrule = "FREQ=DAILY",
+                                fromLDT = entryLocalDateTimeString,
                             ),
                         )
                 }
@@ -251,8 +286,11 @@ class PdfComponentsTest {
                     rruleSets =
                         setOf(
                             RRuleSetV1(
-                                profileId = 1, id = 2, description = "PrintMe",
-                                rrule = "INTERVAL=3;FREQ=MONTHLY;BYDAY=3SA", fromLDT = entryLocalDateTimeString,
+                                profileId = 1,
+                                id = 2,
+                                description = "PrintMe",
+                                rrule = "INTERVAL=3;FREQ=MONTHLY;BYDAY=3SA",
+                                fromLDT = entryLocalDateTimeString,
                             ),
                         )
                 }
@@ -280,8 +318,11 @@ class PdfComponentsTest {
                     rruleSets =
                         setOf(
                             RRuleSetV1(
-                                profileId = 1, id = 2, description = "PrintMe",
-                                rrule = "INTERVAL=3;FREQ=MONTHLY;BYDAY=3SA", fromLDT = entryLocalDateTimeString,
+                                profileId = 1,
+                                id = 2,
+                                description = "PrintMe",
+                                rrule = "INTERVAL=3;FREQ=MONTHLY;BYDAY=3SA",
+                                fromLDT = entryLocalDateTimeString,
                             ),
                         )
                 }
@@ -309,8 +350,11 @@ class PdfComponentsTest {
                     rruleSets =
                         setOf(
                             RRuleSetV1(
-                                profileId = 1, id = 2, description = "PrintMe",
-                                rrule = "INTERVAL=3;FREQ=MONTHLY;BYDAY=3SA", fromLDT = entryLocalDateTimeString,
+                                profileId = 1,
+                                id = 2,
+                                description = "PrintMe",
+                                rrule = "INTERVAL=3;FREQ=MONTHLY;BYDAY=3SA",
+                                fromLDT = entryLocalDateTimeString,
                             ),
                         )
                 }

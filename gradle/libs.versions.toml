@@ -1,14 +1,18 @@
 [versions]
-androidx-lifecycle = "2.9.0"
-composeHotReload = "1.0.0-alpha10"
-composeMultiplatform = "1.8.1"
-kotlin = "2.1.21"
-kotlinx-coroutines = "1.10.1"
+androidx-lifecycle = "2.9.1"
+composeHotReload = "1.0.0-alpha11"
+composeMultiplatform = "1.8.2"
+junit = "4.13.2"
+kotlin = "2.2.0"
+kotlinx-coroutines = "1.10.2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+junit = { module = "junit:junit", version.ref = "junit" }
+compose-ui-test-junit4 = {module = "org.jetbrains.compose.ui:ui-test-junit4", version.ref = "composeMultiplatform"}
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
-androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 
 [plugins]

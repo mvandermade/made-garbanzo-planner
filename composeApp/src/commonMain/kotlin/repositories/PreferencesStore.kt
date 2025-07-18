@@ -28,9 +28,7 @@ class PreferencesStore(
         }
     }
 
-    fun getPreferencesAsJson(): String {
-        return json.encodeToString(prefs)
-    }
+    fun getPreferencesAsJson(): String = json.encodeToString(prefs)
 
     var rruleSets: Set<RRuleSetV1>
         get() = prefs.rruleSets

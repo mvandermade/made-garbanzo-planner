@@ -6,8 +6,8 @@ import models.preferences.PreferencesV2
 fun PreferencesV1.toV2(
     externalPreferencesIsEnabled: Boolean,
     externalPreferencesPath: String,
-): PreferencesV2 {
-    return PreferencesV2(
+): PreferencesV2 =
+    PreferencesV2(
         version = version,
         rruleSets = rruleSets,
         activeProfile = activeProfile,
@@ -20,4 +20,3 @@ fun PreferencesV1.toV2(
         externalPreferencesIsEnabled = externalPreferencesIsEnabled,
         externalPreferencesPath = externalPreferencesPath,
     )
-}
