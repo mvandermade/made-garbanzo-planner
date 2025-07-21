@@ -3,6 +3,8 @@ Plan ahead, one entity at a time!
 
 Downloads avaiable under releases to the right from here >>>
 
+Steps only for windows, you need to create a shortcut to the program yourself. Default location: C:\Program Files\made-garbanzo-planner
+
 ![Logo](composeApp/icon/icon.png)
 
 ## Motivation
