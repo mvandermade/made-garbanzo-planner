@@ -69,9 +69,7 @@ fun start(
                 }
             }
             Divider()
-            Row {
-                DatePickerRow(preferencesStore)
-            }
+            DatePickerRow(preferencesStore)
             Row {
                 Button(
                     onClick = { requestNewAppState(AppState.LICENSE) },

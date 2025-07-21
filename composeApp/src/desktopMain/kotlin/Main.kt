@@ -76,6 +76,10 @@ fun main() {
                         preferencesStore.pdfOutputPath = writeAndOpenMainDocument(preferencesStore)
                     }
 
+                    if (preferencesStore.startDateIsEnabled) {
+                        preferencesStore.startDateIsEnabled = false
+                    }
+
                     // Error handling
                     if (preferencesV2external == null && preferencesStoreExternal != null) {
                         PreferenceExceptionScreen(preferencesStoreExternal)
