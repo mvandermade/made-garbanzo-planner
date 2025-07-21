@@ -7,15 +7,18 @@ import models.preferences.PreferencesV2
 import java.io.File
 import java.util.prefs.Preferences
 
-class PreferencesStoreExternal(private val preferences: Preferences, private val path: String) : PreferencesStoreRaw {
+class PreferencesStoreExternal(
+    private val preferences: Preferences,
+    private val path: String,
+) : PreferencesStoreRaw {
     private val jsonIgnoreUnknownKeys = Json { ignoreUnknownKeys = true }
     private val json = Json
 
-    override fun readVersion(): Long {
-        return jsonIgnoreUnknownKeys.decodeFromString<PreferencesTree>(
-            File(path).readText(),
-        ).version
-    }
+    override fun readVersion(): Long =
+        jsonIgnoreUnknownKeys
+            .decodeFromString<PreferencesTree>(
+                File(path).readText(),
+            ).version
 
     override fun dumpAsString(preferencesTree: String) {
         // Verify there is at least a version present
@@ -27,13 +30,10 @@ class PreferencesStoreExternal(private val preferences: Preferences, private val
         preferences.remove(APP_PREFERENCES_JSON)
     }
 
-    override fun readAsStringIfExists(): String {
-        return File(path).readText()
-    }
+    override fun readAsStringIfExists(): String = File(path).readText()
 
-    override fun readV2(): PreferencesV2 {
-        return json.decodeFromString<PreferencesV2>(
+    override fun readV2(): PreferencesV2 =
+        json.decodeFromString<PreferencesV2>(
             File(path).readText(),
         )
-    }
 }

@@ -66,8 +66,8 @@ fun writeMainDocument(
 fun getFromLDT(
     preferencesStore: PreferencesStore,
     timeProvider: TimeProvider,
-): LocalDateTime {
-    return if (preferencesStore.startDateIsEnabled) {
+): LocalDateTime =
+    if (preferencesStore.startDateIsEnabled) {
         try {
             val localDate = LocalDate.parse(preferencesStore.startDate, formatterLD)
             LocalDateTime.of(localDate, LocalTime.MIDNIGHT)
@@ -77,7 +77,6 @@ fun getFromLDT(
     } else {
         timeProvider.getLocalDateTimeNow()
     }
-}
 
 private fun writePage(
     doc: PDDocument,

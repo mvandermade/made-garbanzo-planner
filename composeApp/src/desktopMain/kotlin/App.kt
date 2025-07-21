@@ -2,6 +2,7 @@ import androidx.compose.runtime.*
 import models.AppState
 import repositories.PreferencesStore
 import screens.advancedPreferences
+import screens.license
 import screens.preferences
 import screens.start
 
@@ -17,5 +18,6 @@ fun App(preferencesStore: PreferencesStore) {
         AppState.START -> start(::requestNewAppState, preferencesStore)
         AppState.PREFERENCES -> preferences(::requestNewAppState, preferencesStore)
         AppState.ADVANCED_PREFERENCES -> advancedPreferences(::requestNewAppState, preferencesStore)
+        AppState.LICENSE -> license(::requestNewAppState)
     }
 }

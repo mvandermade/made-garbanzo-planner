@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.kotlinSerialization)
-    id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
+    id("org.jlleitschuh.gradle.ktlint") version "13.0.0"
     id("com.github.ben-manes.versions") version "0.52.0"
 }
 
@@ -20,12 +20,12 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
+            implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.androidx.lifecycle.runtimeCompose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -38,13 +38,13 @@ kotlin {
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
         }
         desktopTest.dependencies {
-            implementation("org.jetbrains.compose.ui:ui-test-junit4:1.8.1")
+            implementation(libs.compose.ui.test.junit4)
             implementation("io.mockk:mockk:1.14.2")
             implementation("nl.wykorijnsburger.kminrandom:kminrandom:1.0.4")
 
-            implementation("org.junit.jupiter:junit-jupiter-api:5.13.1")
-            implementation("org.junit.jupiter:junit-jupiter-params:5.13.1")
-            implementation("org.junit.jupiter:junit-jupiter-engine:5.13.1")
+            implementation(libs.junit.jupiter.api)
+            implementation(libs.junit.jupiter.engine)
+            implementation(libs.junit.jupiter.params)
         }
     }
 }
