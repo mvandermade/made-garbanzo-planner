@@ -73,8 +73,8 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "made-gp"
-            packageVersion = "1.0.7"
+            packageName = "made-garbanzo-planner"
+            packageVersion = "1.0.8"
         }
     }
 }
