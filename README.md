@@ -1,5 +1,8 @@
 # made-garbanzo-planner
 Plan ahead, one entity at a time!
+
+Downloads avaiable under releases to the right from here >>>
+
 ![Logo](composeApp/icon/icon.png)
 
 ## Motivation
