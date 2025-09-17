@@ -72,12 +72,12 @@ fun main() {
                         }
                     }
 
-                    if (preferencesStore.onStartUpOpenPDF) {
-                        preferencesStore.pdfOutputPath = writeAndOpenMainDocument(preferencesStore)
-                    }
-
                     if (preferencesStore.startDateIsEnabled) {
                         preferencesStore.startDateIsEnabled = false
+                    }
+
+                    if (preferencesStore.onStartUpOpenPDF) {
+                        preferencesStore.pdfOutputPath = writeAndOpenMainDocument(preferencesStore)
                     }
 
                     // Error handling
