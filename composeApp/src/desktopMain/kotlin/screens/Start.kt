@@ -71,14 +71,16 @@ fun start(
             Divider()
             DatePickerRow(preferencesStore)
             Row {
-                Button(
-                    onClick = { requestNewAppState(AppState.LICENSE) },
-                    colors =
-                        ButtonDefaults.buttonColors(
-                            backgroundColor = MaterialTheme.colors.background,
-                        ),
-                ) {
-                    Text("Licentie")
+                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
+                    Button(
+                        onClick = { requestNewAppState(AppState.LICENSE) },
+                        colors =
+                            ButtonDefaults.buttonColors(
+                                backgroundColor = MaterialTheme.colors.background,
+                            ),
+                    ) {
+                        Text("Licentie")
+                    }
                 }
             }
         }
