@@ -10,4 +10,5 @@ fun migratePreferences(preferencesStore: PreferencesStoreRaw) {
     1L.let { if (currentVersion <= it) initialData(it, preferencesStore) }
     2L.let { if (currentVersion <= it) addSportProfile(it, preferencesStore) }
     3L.let { if (currentVersion <= it) addPreferences(it, preferencesStore) }
+    // Latest written version is v4
 }
