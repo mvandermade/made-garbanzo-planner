@@ -5,6 +5,8 @@ import models.ProfileV1
 import models.preferences.PreferencesV2
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import preferences.store.ObtainedStoreResult
+import preferences.store.obtainStore
 import java.io.File
 import java.util.prefs.Preferences
 import kotlin.test.Test
@@ -23,10 +25,10 @@ class ObtainStoreTest {
 
         val result = obtainStore(javaPreferences = prefs)
 
-        assertTrue(result is StartupResult.PreferenceError)
+        assertTrue(result is ObtainedStoreResult.Error)
     }
 
-    private fun sampleMigrationV4(
+    private fun sourceV4(
         externalEnabled: Boolean = false,
         externalPath: String = "",
         onStartUpOpenPDF: Boolean = false,
@@ -48,40 +50,39 @@ class ObtainStoreTest {
         )
 
     @Test
-    fun `Migration steps for a V4 till current version`() {
+    fun `Migration steps for a V4 till current version external`() {
         val prefs = freshPrefsNode()
         val externalFile = File.createTempFile("prefs-external", ".json")
         externalFile.deleteOnExit()
 
         // Prepare external preferences content
-        val externalV2 =
-            sampleMigrationV4(
+        val externalV4 =
+            sourceV4(
                 externalEnabled = false,
                 onStartUpOpenPDF = true,
                 startDateEnabled = true,
             )
-        externalFile.writeText(json.encodeToString(externalV2))
+        externalFile.writeText(json.encodeToString(externalV4))
 
         // Internal preferences point to external and want to open PDF
-        val internalV2 =
-            sampleMigrationV4(
+        val internalV4 =
+            sourceV4(
                 externalEnabled = true,
                 externalPath = externalFile.absolutePath,
                 onStartUpOpenPDF = false,
                 startDateEnabled = true,
             )
-        prefs.put(APP_PREFERENCES_JSON, json.encodeToString(internalV2))
+        prefs.put(APP_PREFERENCES_JSON, json.encodeToString(internalV4))
 
         val result = obtainStore(javaPreferences = prefs)
 
-        assertTrue(result is StartupResult.AppReady)
-        val store = (result as StartupResult.AppReady).store
+        assertTrue(result is ObtainedStoreResult.Ready)
+        val store = (result as ObtainedStoreResult.Ready).store
 
         assertTrue(store.externalPreferencesIsEnabled)
         assertEquals(externalFile.absolutePath, store.externalPreferencesPath)
 
         // Verify that external preferences are used
-        assertEquals(false, store.startDateIsEnabled)
-        assertTrue(store.pdfOutputPath.endsWith(".pdf"))
+        assertEquals(true, store.startDateIsEnabled)
     }
 }

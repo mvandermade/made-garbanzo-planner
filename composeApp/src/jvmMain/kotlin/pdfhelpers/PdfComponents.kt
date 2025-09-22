@@ -1,4 +1,4 @@
-package pdf
+package pdfhelpers
 
 import formatterLDT
 import getWeekNumberOfNextMonday

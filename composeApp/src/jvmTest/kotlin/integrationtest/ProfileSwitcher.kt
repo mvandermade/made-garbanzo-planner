@@ -9,7 +9,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import preferences.PreferencesStoreInternal
-import preferences.migratePreferences
+import preferences.store.migratePreferences
 import repositories.PreferencesStore
 import waitUntilText
 import java.util.prefs.Preferences
