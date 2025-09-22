@@ -4,7 +4,6 @@ import FORMAT_LD
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.Checkbox
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -16,7 +15,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import formatterLD
 import getWeekNumberOfNextMonday
 import repositories.PreferencesStore
@@ -40,7 +38,7 @@ fun DatePickerRow(preferencesStore: PreferencesStore) {
         try {
             val localDate = LocalDate.parse(value, formatterLD)
             val fromLocalDateTime = LocalDateTime.of(localDate, LocalTime.MIDNIGHT)
-            errorMsg = "✅ week: ${getWeekNumberOfNextMonday(fromLocalDateTime)}"
+            errorMsg = "✅ genereert week: ${getWeekNumberOfNextMonday(fromLocalDateTime)}"
             errorMsgTimer =
                 Timer("Reset error message").schedule(3000, 5000L) {
                     errorMsg = ""
@@ -75,8 +73,10 @@ fun DatePickerRow(preferencesStore: PreferencesStore) {
                     },
                 )
             }
-            if (errorMsg.isNotEmpty()) {
-                Column(Modifier.width(400.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        }
+        if (errorMsg.isNotEmpty()) {
+            Row {
+                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(errorMsg, color = MaterialTheme.colors.error)
                 }
             }
