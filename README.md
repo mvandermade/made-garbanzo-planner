@@ -40,3 +40,5 @@ The recurrence rule section showing an error. The error will be handled in the p
 ## Developer notes
 Best is to use the pre commit hook for ktlint, otherwise the CI will fail, and it is embarrassing (: You can "install" it by copying the pre-commit file to the .git/hooks directory or run the gradle task supplied by the root build.gradle.kts.
 - Dependency updates gradle > help > dependencyUpdates
+Used gradle actions
+- https://github.com/gradle/actions
