@@ -1,4 +1,4 @@
-package pdf
+package pdfhelpers
 
 import models.BoxCoordinates
 import org.apache.pdfbox.pdmodel.PDDocument

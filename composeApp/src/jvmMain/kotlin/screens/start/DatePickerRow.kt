@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Checkbox
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
@@ -29,8 +28,8 @@ fun DatePickerRow(preferencesStore: PreferencesStore) {
     var startDateEnabled by remember { mutableStateOf(preferencesStore.startDateIsEnabled) }
     var localDateString by remember { mutableStateOf(preferencesStore.startDate) }
 
-    var errorMsg by remember { mutableStateOf("") }
-    var errorMsgTimer by remember { mutableStateOf<TimerTask?>(null) }
+    var infoMsg by remember { mutableStateOf("") }
+    var infoMsgTimer by remember { mutableStateOf<TimerTask?>(null) }
 
     fun saveLD(value: String) {
         localDateString = value
@@ -38,15 +37,15 @@ fun DatePickerRow(preferencesStore: PreferencesStore) {
         try {
             val localDate = LocalDate.parse(value, formatterLD)
             val fromLocalDateTime = LocalDateTime.of(localDate, LocalTime.MIDNIGHT)
-            errorMsg = "✅ genereert week: ${getWeekNumberOfNextMonday(fromLocalDateTime)}"
-            errorMsgTimer =
-                Timer("Reset error message").schedule(3000, 5000L) {
-                    errorMsg = ""
-                    errorMsgTimer?.cancel()
+            infoMsg = "✅ genereert week: ${getWeekNumberOfNextMonday(fromLocalDateTime)}"
+            infoMsgTimer =
+                Timer("Reset infoMsg").schedule(3000, 5000L) {
+                    infoMsg = ""
+                    infoMsgTimer?.cancel()
                 }
         } catch (e: Exception) {
-            errorMsgTimer?.cancel()
-            errorMsg = "Heeft aandacht nodig: ${e.message}"
+            infoMsgTimer?.cancel()
+            infoMsg = "Heeft aandacht nodig: ${e.message}"
         }
     }
 
@@ -74,10 +73,10 @@ fun DatePickerRow(preferencesStore: PreferencesStore) {
                 )
             }
         }
-        if (errorMsg.isNotEmpty()) {
+        if (infoMsg.isNotEmpty()) {
             Row {
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(errorMsg, color = MaterialTheme.colors.error)
+                    Text(infoMsg)
                 }
             }
         }
