@@ -1,6 +1,7 @@
-package preferences
+package preferences.store
 
-import preferences.changesets.addPreferences
+import preferences.PreferencesStoreRaw
+import preferences.changesets.addExternalPreferences
 import preferences.changesets.addSportProfile
 import preferences.changesets.initialData
 
@@ -9,5 +10,6 @@ fun migratePreferences(preferencesStore: PreferencesStoreRaw) {
 
     1L.let { if (currentVersion <= it) initialData(it, preferencesStore) }
     2L.let { if (currentVersion <= it) addSportProfile(it, preferencesStore) }
-    3L.let { if (currentVersion <= it) addPreferences(it, preferencesStore) }
+    3L.let { if (currentVersion <= it) addExternalPreferences(it, preferencesStore) }
+    // The latest version written should be max + 1
 }

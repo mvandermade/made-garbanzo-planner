@@ -1,4 +1,4 @@
-package pdf
+package pdfhelpers
 
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
