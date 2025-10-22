@@ -6,7 +6,7 @@ import models.mappers.toV2
 import models.preferences.PreferencesV1
 import preferences.PreferencesStoreRaw
 
-fun addPreferences(
+fun addExternalPreferences(
     version: Long,
     preferencesStore: PreferencesStoreRaw,
 ) {

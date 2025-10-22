@@ -11,12 +11,9 @@ plugins {
 }
 
 kotlin {
-    jvm("desktop")
+    jvm()
 
     sourceSets {
-        val desktopMain by getting
-        val desktopTest by getting
-
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -30,14 +27,14 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
-        desktopMain.dependencies {
+        jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
             implementation("org.apache.pdfbox:pdfbox:3.0.5")
             implementation("org.dmfs:lib-recur:0.17.1")
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
         }
-        desktopTest.dependencies {
+        jvmTest.dependencies {
             implementation(libs.compose.ui.test.junit4)
             implementation("io.mockk:mockk:1.14.2")
             implementation("nl.wykorijnsburger.kminrandom:kminrandom:1.0.4")
@@ -74,7 +71,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "made-garbanzo-planner"
-            packageVersion = "1.0.10"
+            packageVersion = "1.0.11"
         }
     }
 }

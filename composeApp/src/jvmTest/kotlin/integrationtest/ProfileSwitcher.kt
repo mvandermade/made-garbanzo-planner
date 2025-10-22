@@ -9,13 +9,13 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import preferences.PreferencesStoreInternal
-import preferences.migratePreferences
+import preferences.store.migratePreferences
 import repositories.PreferencesStore
-import waitUntilSubstringText
 import waitUntilText
 import java.util.prefs.Preferences
+import kotlin.test.assertEquals
 
-class StartTest {
+class ProfileSwitcher {
     @get:Rule
     val cr = createComposeRule()
 
@@ -32,14 +32,16 @@ class StartTest {
     }
 
     @Test
-    fun `License should be clickable and show my name`() {
+    fun `Set RRule and then generate a PDF Expect it to be on it`() {
         cr.setContent {
             App(preferencesStore)
         }
 
-        cr.waitUntilText("Licentie")
-        cr.onNodeWithText("Licentie").performClick()
+        assertEquals(1, preferencesStore.activeProfile)
 
-        cr.waitUntilSubstringText("Martijn van der Made")
+        cr.waitUntilText("Sport")
+        cr.onNodeWithText("Sport").performClick()
+
+        assertEquals(3, preferencesStore.activeProfile)
     }
 }
