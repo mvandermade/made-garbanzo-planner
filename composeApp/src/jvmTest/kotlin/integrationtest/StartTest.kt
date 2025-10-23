@@ -1,6 +1,7 @@
 package integrationtest
 
 import App
+import TimeProvider
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -34,7 +35,7 @@ class StartTest {
     @Test
     fun `License should be clickable and show my name`() {
         cr.setContent {
-            App(preferencesStore)
+            App(preferencesStore, TimeProvider())
         }
 
         cr.waitUntilText("Licentie")

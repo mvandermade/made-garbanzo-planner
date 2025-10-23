@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
@@ -13,6 +14,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import models.AppState
 import repositories.PreferencesStore
 import screens.advancedPreferences.AutoLaunchRow
@@ -33,7 +35,7 @@ fun advancedPreferences(
             Column {
                 Row {
                     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                        Button(onClick = { requestNewAppState(AppState.PREFERENCES) }) {
+                        Button(onClick = { requestNewAppState(AppState.PREFERENCES) }, Modifier.width(250.dp)) {
                             Text("Ga terug naar instellingen")
                         }
                     }

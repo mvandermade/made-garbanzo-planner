@@ -1,6 +1,7 @@
 package integrationtest
 
 import App
+import TimeProvider
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -34,7 +35,7 @@ class ProfileSwitcher {
     @Test
     fun `Set RRule and then generate a PDF Expect it to be on it`() {
         cr.setContent {
-            App(preferencesStore)
+            App(preferencesStore, TimeProvider())
         }
 
         assertEquals(1, preferencesStore.activeProfile)

@@ -5,7 +5,7 @@ import java.time.temporal.WeekFields
 
 fun getWeekNumberOfNextMonday(fromLocalDateTime: LocalDateTime): Int {
     val fromNextMonday = pickNextMonday(fromLocalDateTime)
-    return fromNextMonday.get(WeekFields.ISO.weekOfWeekBasedYear())
+    return getWeekNumberOf(fromNextMonday)
 }
 
 fun pickNextMonday(localDateTime: LocalDateTime): LocalDateTime =
@@ -16,3 +16,5 @@ fun pickNextMonday(localDateTime: LocalDateTime): LocalDateTime =
         .withMinute(0)
         .withSecond(0)
         .withNano(0)
+
+fun getWeekNumberOf(localDateTime: LocalDateTime): Int = localDateTime.get(WeekFields.ISO.weekOfWeekBasedYear())

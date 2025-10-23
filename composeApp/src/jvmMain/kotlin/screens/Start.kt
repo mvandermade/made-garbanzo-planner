@@ -3,6 +3,7 @@ package screens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.dp
 import models.AppState
 import pdfhelpers.writeAndOpenMainDocument
 import repositories.PreferencesStore
@@ -37,7 +39,7 @@ fun start(
         Column {
             Row {
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Button(onClick = { requestNewAppState(AppState.PREFERENCES) }) {
+                    Button(onClick = { requestNewAppState(AppState.PREFERENCES) }, Modifier.width(250.dp)) {
                         Text("Ga naar instellingen ⚙️")
                     }
                 }
@@ -46,7 +48,7 @@ fun start(
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Button(onClick = {
                         pdfPath = writeAndOpenMainDocument(preferencesStore)
-                    }) {
+                    }, Modifier.width(250.dp)) {
                         Text("Genereer PDF 📜")
                     }
                 }
