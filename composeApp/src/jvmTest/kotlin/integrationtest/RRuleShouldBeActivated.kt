@@ -1,6 +1,7 @@
 package integrationtest
 
 import App
+import TimeProvider
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.assertTextContains
@@ -42,7 +43,7 @@ class RRuleShouldBeActivated {
     @Test
     fun `Set RRule and then generate a PDF Expect it to be on it`() {
         cr.setContent {
-            App(preferencesStore)
+            App(preferencesStore, TimeProvider())
         }
 
         cr.waitUntilText("Ga naar instellingen ⚙️")
@@ -58,8 +59,8 @@ class RRuleShouldBeActivated {
 
         cr.onNodeWithText("+ Recurrence rule").performClick()
 
-        cr.onNodeWithContentDescription("RRule-1-description").performTextInput("TESTRRULE")
-        cr.onNodeWithContentDescription("RRule-1-RRule").performTextInput("FREQ=DAILY")
+        cr.onNodeWithContentDescription("RRule-2-description").performTextInput("TESTRRULE")
+        cr.onNodeWithContentDescription("RRule-2-RRule").performTextInput("FREQ=DAILY")
 
         // Go back to menu and get PDF
         cr.onNodeWithText("Ga terug naar start").performClick()
@@ -80,7 +81,7 @@ class RRuleShouldBeActivated {
     @Test
     fun `Set RRule with bad syntax expect message on the screen`() {
         cr.setContent {
-            App(preferencesStore)
+            App(preferencesStore, TimeProvider())
         }
 
         cr.waitUntilText("Ga naar instellingen ⚙️")
@@ -88,20 +89,43 @@ class RRuleShouldBeActivated {
 
         cr.waitUntilText("Ga terug naar start")
 
-        // Disable auto popup of the PDF
-        cr.onNodeWithText("Geavanceerde instellingen").performClick()
-        cr.waitUntilText("Ga terug naar instellingen")
-        cr.onNodeWithContentDescription("auto-open-pdf").performClick()
-        cr.onNodeWithText("Ga terug naar instellingen").performClick()
-
         cr.onNodeWithText("+ Recurrence rule").performClick()
 
-        cr.onNodeWithContentDescription("RRule-1-description").performTextInput("TESTRRULE")
-        cr.onNodeWithContentDescription("RRule-1-RRule").performTextInput("FREQ=DAIL")
+        cr.onNodeWithContentDescription("RRule-2-description").performTextInput("TESTRRULE")
+        cr.onNodeWithContentDescription("RRule-2-RRule").performTextInput("FREQ=DAIL")
 
         cr
             .onNodeWithContentDescription(
                 "RRule-popup-text",
-            ).assertTextContains("TESTRRULEDagelijks herhalen heeft aandacht nodig: FREQ part is missing")
+            ).assertTextContains("TESTRRULE heeft aandacht nodig: FREQ part is missing")
     }
+
+    // Could not finish this test because the performClick does not seem to fire on the onclick {} handler
+    // I tried to println() debug but this did not show up in the console.
+//    @Test
+//    fun `Clicking the help button will display helpful text that is correct`() {
+//        val timeProvider = mockk<TimeProvider>()
+//        cr.setContent {
+//            App(preferencesStore, timeProvider)
+//        }
+//
+//        cr.waitUntilText("Ga naar instellingen ⚙️")
+//        cr.onNodeWithText("Ga naar instellingen ⚙️").performClick()
+//
+//        cr.waitUntilText("Ga terug naar start")
+//
+//        cr.onNodeWithText("+ Recurrence rule").performClick()
+//
+//        cr.onNodeWithContentDescription("RRule-2-description").performTextInput("TESTRRULE")
+//        cr.onNodeWithContentDescription("RRule-2-RRule").performTextInput("FREQ=MONTHLY")
+//
+//        cr.onNodeWithContentDescription("RRule-2-info").performClick()
+//
+//        cr.waitUntilText("Data blabla")
+//
+//        cr
+//            .onNodeWithContentDescription(
+//                "Test-RRule-popup-text",
+//            ).assertTextContains("Data blabla")
+//    }
 }

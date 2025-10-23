@@ -10,6 +10,7 @@ import java.util.prefs.Preferences
 
 fun main() {
     val javaPreferences = Preferences.userRoot().node(PreferencesStoreInternal::class.java.name)
+    val timeProvider = TimeProvider()
 
     application {
         Window(
@@ -19,7 +20,7 @@ fun main() {
             when (val result = obtainStore(javaPreferences)) {
                 is ObtainedStoreResult.Ready -> {
                     preflight(result.store)
-                    App(result.store)
+                    App(result.store, timeProvider)
                 }
                 is ObtainedStoreResult.Error -> PreferenceExceptionScreen(result.store)
             }
