@@ -3,6 +3,7 @@ package integrationtest
 import App
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -74,5 +75,33 @@ class RRuleShouldBeActivated {
         val text = PDFTextStripper().getText(doc)
 
         assertContains(text, "TESTRRULE")
+    }
+
+    @Test
+    fun `Set RRule with bad syntax expect message on the screen`() {
+        cr.setContent {
+            App(preferencesStore)
+        }
+
+        cr.waitUntilText("Ga naar instellingen ⚙️")
+        cr.onNodeWithText("Ga naar instellingen ⚙️").performClick()
+
+        cr.waitUntilText("Ga terug naar start")
+
+        // Disable auto popup of the PDF
+        cr.onNodeWithText("Geavanceerde instellingen").performClick()
+        cr.waitUntilText("Ga terug naar instellingen")
+        cr.onNodeWithContentDescription("auto-open-pdf").performClick()
+        cr.onNodeWithText("Ga terug naar instellingen").performClick()
+
+        cr.onNodeWithText("+ Recurrence rule").performClick()
+
+        cr.onNodeWithContentDescription("RRule-1-description").performTextInput("TESTRRULE")
+        cr.onNodeWithContentDescription("RRule-1-RRule").performTextInput("FREQ=DAIL")
+
+        cr
+            .onNodeWithContentDescription(
+                "RRule-popup-text",
+            ).assertTextContains("TESTRRULEDagelijks herhalen heeft aandacht nodig: FREQ part is missing")
     }
 }

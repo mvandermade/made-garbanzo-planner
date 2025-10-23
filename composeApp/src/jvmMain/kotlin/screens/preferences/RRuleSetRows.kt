@@ -34,14 +34,70 @@ fun RRuleSetRows(
     preferencesStore: PreferencesStore,
     activeProfile: MutableState<Long>,
 ) {
-    var rruleErrorMsgTimer by remember { mutableStateOf<TimerTask?>(null) }
-    var saveMsgTimer by remember { mutableStateOf<TimerTask?>(null) }
     val rruleList =
         mutableStateListOf<RRuleSetV1>().apply {
             addAll(preferencesStore.rruleSets)
         }
+    var rruleErrorMsgTimer by remember { mutableStateOf<TimerTask?>(null) }
     var rruleErrorMsg by remember { mutableStateOf("") }
+    var showRruleErrorPopup by remember { mutableStateOf(false) }
+
+    var saveMsgTimer by remember { mutableStateOf<TimerTask?>(null) }
     var saveMsg by remember { mutableStateOf("") }
+    var showSavePopup by remember { mutableStateOf(false) }
+
+    PopupBox(popupWidth = 300F, popupHeight = 150F, showPopup = showSavePopup, onClickOutside = {
+        showSavePopup = false
+    }, content = {
+        Text(
+            saveMsg,
+            modifier =
+                Modifier.semantics {
+                    contentDescription =
+                        "Save-popup-text"
+                },
+        )
+    })
+    PopupBox(popupWidth = 200F, popupHeight = 150F, showPopup = showRruleErrorPopup, onClickOutside = {
+        showRruleErrorPopup =
+            false
+    }, content = {
+        Text(
+            rruleErrorMsg,
+            color = MaterialTheme.colors.error,
+            modifier =
+                Modifier.semantics {
+                    contentDescription =
+                        "RRule-popup-text"
+                },
+        )
+    })
+
+    fun resetRRuleTimer(): TimerTask =
+        Timer("Reset error message").schedule(3000, 5000L) {
+            showRruleErrorPopup = false
+            rruleErrorMsg = ""
+            rruleErrorMsgTimer?.cancel()
+        }
+
+    fun resetSaveMsgTimer(): TimerTask =
+        Timer("Reset save message").schedule(3000, 5000L) {
+            showSavePopup = false
+            saveMsg = ""
+            saveMsgTimer?.cancel()
+        }
+
+    fun setRRuleErrorMsg(msg: String) {
+        rruleErrorMsgTimer?.cancel()
+        showRruleErrorPopup = true
+        rruleErrorMsg = msg
+    }
+
+    fun setSaveMsg(msg: String = "🗓️ Opgeslagen!") {
+        saveMsgTimer?.cancel()
+        showSavePopup = true
+        saveMsg = msg
+    }
 
     fun addRRule() {
         val element = rruleList.maxByOrNull { it.id }
@@ -72,13 +128,8 @@ fun RRuleSetRows(
         rruleList.remove(rrule)
         rruleList.add(copy)
         preferencesStore.rruleSets = rruleList.toSet()
-        saveMsgTimer?.cancel()
-        saveMsg = "💬Opgeslagen!"
-        saveMsgTimer =
-            Timer("Reset save message").schedule(3000, 5000L) {
-                saveMsg = ""
-                saveMsgTimer?.cancel()
-            }
+        setSaveMsg()
+        saveMsgTimer = resetSaveMsgTimer()
     }
 
     fun saveLDT(
@@ -93,25 +144,16 @@ fun RRuleSetRows(
 
         try {
             LocalDateTime.parse(ldtString, formatterLDT)
-            rruleErrorMsg = "✅"
-            rruleErrorMsgTimer =
-                Timer("Reset error message").schedule(3000, 5000L) {
-                    rruleErrorMsg = ""
-                    rruleErrorMsgTimer?.cancel()
-                }
+            rruleErrorMsgTimer = resetRRuleTimer()
+            setSaveMsg()
+            saveMsgTimer = resetSaveMsgTimer()
         } catch (e: Exception) {
-            rruleErrorMsgTimer?.cancel()
-            rruleErrorMsg = "${rrule.description} heeft aandacht nodig: ${e.message}"
+            setRRuleErrorMsg("${rrule.description} heeft aandacht nodig: ${e.message}")
             return
         }
 
-        saveMsgTimer?.cancel()
-        saveMsg = "💬Opgeslagen!"
-        saveMsgTimer =
-            Timer("Reset save message").schedule(3000, 5000L) {
-                saveMsg = ""
-                saveMsgTimer?.cancel()
-            }
+        setSaveMsg()
+        saveMsgTimer = resetSaveMsgTimer()
     }
 
     fun saveRRule(
@@ -127,26 +169,16 @@ fun RRuleSetRows(
 
         try {
             RecurrenceRule(rruleString)
-            rruleErrorMsg = "✅"
-            rruleErrorMsgTimer =
-                Timer("Reset error message").schedule(3000, 5000L) {
-                    rruleErrorMsg = ""
-                    rruleErrorMsgTimer?.cancel()
-                }
+            setRRuleErrorMsg("✅")
+            rruleErrorMsgTimer = resetRRuleTimer()
         } catch (e: Exception) {
-            rruleErrorMsgTimer?.cancel()
-            rruleErrorMsg = "${rrule.description} heeft aandacht nodig: ${e.message}"
+            setRRuleErrorMsg("${rrule.description} heeft aandacht nodig: ${e.message}")
             return
         }
 
         // Save indicator
-        saveMsg = "🗓️Opgeslagen!"
-        saveMsgTimer?.cancel()
-        saveMsgTimer =
-            Timer("Reset save message").schedule(3000, 5000L) {
-                saveMsg = ""
-                saveMsgTimer?.cancel()
-            }
+        setSaveMsg()
+        saveMsgTimer = resetSaveMsgTimer()
     }
 
     fun deleteRRule(id: Long) {
@@ -162,21 +194,11 @@ fun RRuleSetRows(
                     Text("+ Recurrence rule")
                 }
             }
-            Column {
-                if (saveMsg != "") {
-                    Text(saveMsg)
-                }
-            }
-            Column {
-                if (rruleErrorMsg != "") {
-                    Text(rruleErrorMsg, color = MaterialTheme.colors.error)
-                }
-            }
         }
         Row {
             Column {
                 Text(
-                    "Een recurrence rule (RRULE) beschrijft iets wat zich herhaalt in de tijd." +
+                    "Een recurrence rule (RRule) beschrijft iets wat zich herhaalt in de tijd." +
                         " Voorbeelden zijn te vinden op: https://jkbrzt.github.io/rrule",
                 )
             }
