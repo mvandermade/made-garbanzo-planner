@@ -2,7 +2,6 @@ package screens.preferences
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -33,9 +32,6 @@ fun PopupBox(
                     .zIndex(10F),
             contentAlignment = Alignment.Center,
         ) {
-            Column(Modifier.height(60.dp)) {
-                // Make sure the Ga terug naar Start button is visible
-            }
             Popup(
                 alignment = Alignment.Center,
                 onDismissRequest = { onClickOutside() },

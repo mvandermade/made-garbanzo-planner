@@ -62,7 +62,8 @@ class RRuleShouldBeActivated {
         cr.onNodeWithContentDescription("RRule-2-description").performTextInput("TESTRRULE")
         cr.onNodeWithContentDescription("RRule-2-RRule").performTextInput("FREQ=DAILY")
 
-        // Go back to menu and get PDF
+        // Go back to menu and get PDF, click thuis first to dismiss the popup
+        cr.onNodeWithText("Thuis").performClick()
         cr.onNodeWithText("Ga terug naar start").performClick()
         cr.waitUntilText("Genereer PDF 📜")
         cr.onNodeWithText("Genereer PDF 📜").performClick()
