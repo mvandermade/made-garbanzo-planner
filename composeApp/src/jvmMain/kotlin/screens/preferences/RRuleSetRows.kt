@@ -57,46 +57,6 @@ fun RRuleSetRows(
     var testRRuleMsg by remember { mutableStateOf("") }
     var showTestRRulePopup by remember { mutableStateOf(false) }
 
-    PopupBox(popupWidth = 500F, popupHeight = 150F, showPopup = showTestRRulePopup, onClickOutside = {
-        showTestRRulePopup = false
-    }, content = {
-        Text(
-            testRRuleMsg,
-            modifier =
-                Modifier.semantics {
-                    contentDescription =
-                        "Test-RRule-popup-text"
-                },
-        )
-    })
-
-    PopupBox(popupWidth = 300F, popupHeight = 150F, showPopup = showSavePopup, onClickOutside = {
-        showSavePopup = false
-    }, content = {
-        Text(
-            saveMsg,
-            modifier =
-                Modifier.semantics {
-                    contentDescription =
-                        "Save-popup-text"
-                },
-        )
-    })
-    PopupBox(popupWidth = 200F, popupHeight = 150F, showPopup = showRruleErrorPopup, onClickOutside = {
-        showRruleErrorPopup =
-            false
-    }, content = {
-        Text(
-            rruleErrorMsg,
-            color = MaterialTheme.colors.error,
-            modifier =
-                Modifier.semantics {
-                    contentDescription =
-                        "RRule-popup-text"
-                },
-        )
-    })
-
     fun resetRRuleTimer(): TimerTask =
         Timer("Reset error message").schedule(3000, 5000L) {
             showRruleErrorPopup = false
@@ -241,6 +201,64 @@ fun RRuleSetRows(
 
     MaterialTheme {
         Row {
+            PopupBox(popupWidth = 500F, popupHeight = 150F, showPopup = showTestRRulePopup, onClickOutside = {
+                showTestRRulePopup = false
+            }, content = {
+                Text(
+                    testRRuleMsg,
+                    modifier =
+                        Modifier.semantics {
+                            contentDescription =
+                                "Test-RRule-popup-text"
+                        },
+                )
+            })
+        }
+
+        Row {
+            PopupBox(popupWidth = 300F, popupHeight = 150F, showPopup = showSavePopup, onClickOutside = {
+                showSavePopup = false
+            }, content = {
+                Text(
+                    saveMsg,
+                    modifier =
+                        Modifier.semantics {
+                            contentDescription =
+                                "Save-popup-text"
+                        },
+                )
+            })
+        }
+
+        Row {
+            PopupBox(popupWidth = 200F, popupHeight = 150F, showPopup = showRruleErrorPopup, onClickOutside = {
+                showRruleErrorPopup =
+                    false
+            }, content = {
+                Text(
+                    rruleErrorMsg,
+                    color = MaterialTheme.colors.error,
+                    modifier =
+                        Modifier.semantics {
+                            contentDescription =
+                                "RRule-popup-text"
+                        },
+                )
+            })
+        }
+        Row {
+            Column(Modifier.width(10.dp)) {}
+            Column {
+                Text(
+                    "Een recurrence rule (RRule) beschrijft iets wat zich herhaalt in de tijd.\n" +
+                        "Voorbeeld: Elke maand op vrijdag: " +
+                        "RRULE:FREQ=MONTHLY;BYDAY=FR\n" +
+                        "Meer zijn te vinden op: https://jkbrzt.github.io/rrule\n" +
+                        "De scrollbars kreeg ik niet werkend maar scrollen werkt wel 🪜",
+                )
+            }
+        }
+        Row {
             Column(Modifier.width(10.dp)) {}
             Column {
                 Button(onClick = { addRRule() }) {
@@ -261,7 +279,6 @@ fun RRuleSetRows(
                             Column(Modifier.width(40.dp)) {
                                 Button(
                                     onClick = {
-                                        println("AAH")
                                         testRRule(rruleSet.id)
                                     },
                                     modifier =
@@ -329,18 +346,6 @@ fun RRuleSetRows(
                             }
                         }
                     }
-            }
-        }
-        Row {
-            Column(Modifier.width(10.dp)) {}
-            Column {
-                Text(
-                    "Een recurrence rule (RRule) beschrijft iets wat zich herhaalt in de tijd.\n" +
-                        "Voorbeeld: Elke maand op vrijdag: " +
-                        "RRULE:FREQ=MONTHLY;BYDAY=FR\n" +
-                        "Meer zijn te vinden op: https://jkbrzt.github.io/rrule\n" +
-                        "De scrollbars kreeg ik niet werkend maar scrollen werkt wel 🪜",
-                )
             }
         }
     }

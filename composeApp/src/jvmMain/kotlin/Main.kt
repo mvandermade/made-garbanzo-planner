@@ -1,4 +1,6 @@
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import exceptions.PreferenceExceptionScreen
 import pdfhelpers.writeAndOpenMainDocument
@@ -16,6 +18,8 @@ fun main() {
         Window(
             onCloseRequest = ::exitApplication,
             title = "made-garbanzo-planner ${System.getProperty("jpackage.app-version") ?: ""}",
+            // Windows renders stuff a little bit wider so bit larger than default 800
+            state = WindowState(width = 860.dp, height = 600.dp),
         ) {
             when (val result = obtainStore(javaPreferences)) {
                 is ObtainedStoreResult.Ready -> {
